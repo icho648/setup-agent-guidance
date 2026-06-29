@@ -41,13 +41,13 @@ The installable unit is `skills/setup-agent-guidance/`, not the repository root.
 
 ## Install
 
-### Ask Codex to install from GitHub
+### Install from GitHub in Codex
 
-After replacing `<owner>` with the GitHub account or organization that hosts this repository, ask Codex:
+Enter the following prompt in Codex:
 
 ```text
 Use $skill-installer to install
-https://github.com/<owner>/setup-agent-guidance/tree/main/skills/setup-agent-guidance
+https://github.com/icho648/setup-agent-guidance/tree/main/skills/setup-agent-guidance
 ```
 
 Restart Codex after installation so the new skill is discovered.

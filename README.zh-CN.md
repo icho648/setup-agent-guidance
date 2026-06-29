@@ -37,13 +37,13 @@
 
 ## 安装
 
-### 让 Codex 从 GitHub 安装
+### 在 Codex 中从 GitHub 安装
 
-把 `<owner>` 替换为托管仓库的 GitHub 用户名或组织名，然后对 Codex 说：
+在 Codex 中输入以下提示：
 
 ```text
 使用 $skill-installer 安装
-https://github.com/<owner>/setup-agent-guidance/tree/main/skills/setup-agent-guidance
+https://github.com/icho648/setup-agent-guidance/tree/main/skills/setup-agent-guidance
 ```
 
 安装后重启 Codex，使其发现新 Skill。

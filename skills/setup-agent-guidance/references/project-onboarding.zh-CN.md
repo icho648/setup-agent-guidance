@@ -42,8 +42,8 @@
 
 ## 起草与确认
 
-1. 使用 `assets/AGENTS.template.md` 的项目区块格式生成 `agent-guidance:project` 区块，删除不存在的命令和空标题。
-2. 使用 `assets/CODE_REVIEW.template.md` 生成根目录 `code_review.md`，删除全部占位符和生成说明。
+1. 使用 `assets/AGENTS.<locale>.template.md` 的项目区块格式生成 `agent-guidance:project` 区块，删除不存在的命令和空标题。
+2. 使用 `assets/CODE_REVIEW.<locale>.template.md` 生成根目录 `code_review.md`，删除全部占位符和生成说明。
 3. 保持内容短、具体、可执行。测试命令必须写明工作目录和用途。
 4. 展示将写入的内容或与现有文件的差异，并等待用户明确确认。
 5. 获得确认后才写入。若用户只批准其中一部分，只应用获批部分。
