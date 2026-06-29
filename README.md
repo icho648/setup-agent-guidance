@@ -23,21 +23,19 @@ It installs a small workflow “gearbox” into the project's existing agent ins
 
 ```text
 .
+├── SKILL.md                   # required Agent Skills entry point
+├── agents/
+│   └── openai.yaml            # optional Codex UI metadata
+├── assets/                    # localized templates
+├── references/                # localized onboarding procedure
 ├── AGENTS.md                  # maintenance instructions for coding agents
 ├── CLAUDE.md                  # imports the same maintenance instructions
 ├── README.md
 ├── README.zh-CN.md
-├── LICENSE
-└── skills/
-    └── setup-agent-guidance/
-        ├── SKILL.md           # required Agent Skills entry point
-        ├── agents/
-        │   └── openai.yaml    # optional Codex UI metadata
-        ├── assets/            # localized templates
-        └── references/        # localized onboarding procedure
+└── LICENSE
 ```
 
-The installable unit is `skills/setup-agent-guidance/`, not the repository root.
+The repository root is the installable skill package. Repository-root maintenance files are shipped alongside the skill; target-project templates live under `assets/`.
 
 ## Install
 
@@ -47,41 +45,41 @@ Enter the following prompt in Codex:
 
 ```text
 Use $skill-installer to install
-https://github.com/icho648/setup-agent-guidance/tree/main/skills/setup-agent-guidance
+https://github.com/icho648/setup-agent-guidance
 ```
 
 Restart Codex after installation so the new skill is discovered.
 
 ### Manual installation
 
-Clone the repository, then copy or symlink the installable directory to an Agent Skills location supported by your client.
+Clone the repository, then copy or symlink it to an Agent Skills location supported by your client.
 
 Codex, global:
 
 ```bash
 mkdir -p "$HOME/.agents/skills"
-cp -R skills/setup-agent-guidance "$HOME/.agents/skills/"
+cp -R /path/to/setup-agent-guidance "$HOME/.agents/skills/"
 ```
 
 Codex, current repository:
 
 ```bash
 mkdir -p .agents/skills
-cp -R /path/to/setup-agent-guidance/skills/setup-agent-guidance .agents/skills/
+cp -R /path/to/setup-agent-guidance .agents/skills/
 ```
 
 Claude Code, global:
 
 ```bash
 mkdir -p "$HOME/.claude/skills"
-cp -R skills/setup-agent-guidance "$HOME/.claude/skills/"
+cp -R /path/to/setup-agent-guidance "$HOME/.claude/skills/"
 ```
 
 Claude Code, current repository:
 
 ```bash
 mkdir -p .claude/skills
-cp -R /path/to/setup-agent-guidance/skills/setup-agent-guidance .claude/skills/
+cp -R /path/to/setup-agent-guidance .claude/skills/
 ```
 
 Then invoke `setup-agent-guidance` explicitly or ask the agent to initialize project agent guidance.
@@ -123,7 +121,7 @@ This “one behavior, localized resources” model is preferable to publishing t
 Using the reference validator from the Agent Skills project:
 
 ```bash
-python -m skills_ref.cli validate ./skills/setup-agent-guidance
+python -m skills_ref.cli validate .
 ```
 
 For Codex development environments that include the built-in `skill-creator`, its `quick_validate.py` can also validate the directory.
@@ -132,7 +130,7 @@ This repository also ships a GitHub Actions workflow at `.github/workflows/valid
 
 Before release, test at least one English and one Chinese prompt in fresh sessions. Validate two things independently: whether the skill triggers when expected and whether the generated files match the intended behavior.
 
-Chinese trigger conditions live in `skills/setup-agent-guidance/references/triggers.zh-CN.md` and are loaded only when the project or the user request uses Chinese. The English `description` in `SKILL.md` references that file so the frontmatter stays single-language.
+Chinese trigger conditions live in `references/triggers.zh-CN.md` and are loaded only when the project or the user request uses Chinese. The English `description` in `SKILL.md` references that file so the frontmatter stays single-language.
 
 ## Sources
 

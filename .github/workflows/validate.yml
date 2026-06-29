@@ -27,25 +27,40 @@ jobs:
         run: pip install --quiet skills-ref
 
       - name: Validate skill directory
-        run: python -m skills_ref.cli validate ./skills/setup-agent-guidance
+        run: python -m skills_ref.cli validate .
 
       - name: Confirm required files exist
         run: |
           set -e
-          test -f skills/setup-agent-guidance/SKILL.md
-          test -d skills/setup-agent-guidance/references
-          test -d skills/setup-agent-guidance/assets
+          test -f SKILL.md
+          test -d references
+          test -d assets
+          test -d agents
           echo "Layout OK"
 
       - name: Confirm description length
         run: |
           python - <<'PY'
           import re, pathlib
-          text = pathlib.Path("skills/setup-agent-guidance/SKILL.md").read_text()
+          text = pathlib.Path("SKILL.md").read_text()
           m = re.match(r"---\n(.*?)\n---", text, re.S)
           assert m, "missing frontmatter"
-          desc = re.search(r"^description:\s*(.+)$", m.group(1), re.M)
+          frontmatter = m.group(1).splitlines()
+          desc = None
+          for i, line in enumerate(frontmatter):
+              if line.startswith("description:"):
+                  value = line.split(":", 1)[1].strip()
+                  if value in {">-", "|"}:
+                      lines = []
+                      for cont in frontmatter[i + 1:]:
+                          if cont and not cont.startswith(" "):
+                              break
+                          lines.append(cont.strip())
+                      desc = " ".join(lines).strip()
+                  else:
+                      desc = value
+                  break
           assert desc, "missing description"
-          assert len(desc.group(1)) <= 1024, f"description too long: {len(desc.group(1))}"
-          print(f"description length: {len(desc.group(1))} / 1024")
+          assert len(desc) <= 1024, f"description too long: {len(desc)}"
+          print(f"description length: {len(desc)} / 1024")
           PY

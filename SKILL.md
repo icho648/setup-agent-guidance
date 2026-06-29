@@ -94,7 +94,7 @@ Report which files were created, updated, preserved, or skipped, plus any decisi
 - Edit both onboarding references when changing repository scanning, questions, or confirmation flow.
 - Keep every English/Chinese pair structurally and semantically equivalent; update both in the same change.
 
-Do not add an `AGENTS.md` inside the skill directory as a target template. Repository-root `AGENTS.md` governs development of this skill repository; target-project templates belong under `assets/`.
+Do not use repository-root `AGENTS.md` as a target-project template; it governs development of this skill repository. Target-project templates belong under `assets/`.
 
 ## Safety boundaries
 

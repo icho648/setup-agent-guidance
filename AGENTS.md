@@ -1,10 +1,10 @@
 # Repository Agent Guidance
 
-This repository distributes one portable Agent Skill. The installable package is `skills/setup-agent-guidance/`; repository-root files support maintenance and publication.
+This repository root is one portable Agent Skill package. Repository-root maintenance files are shipped alongside the skill.
 
 ## Source of truth
 
-- Keep one workflow implementation in `skills/setup-agent-guidance/SKILL.md`.
+- Keep one workflow implementation in `SKILL.md`.
 - Treat English and Simplified Chinese resources as semantically equal pairs.
 - Do not create separately discoverable language-specific skills.
 - Keep target-project templates under `assets/`; this root `AGENTS.md` governs repository maintenance only.
@@ -22,7 +22,7 @@ This repository distributes one portable Agent Skill. The installable package is
 
 Before claiming a change complete:
 
-1. Validate `skills/setup-agent-guidance/` with an Agent Skills-compatible validator.
+1. Validate the repository root with an Agent Skills-compatible validator.
 2. Check that every localized resource has its counterpart.
 3. Compare paired headings, managed markers, placeholders, and file references.
 4. Verify every relative path referenced by `SKILL.md` exists.

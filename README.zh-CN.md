@@ -19,21 +19,19 @@
 
 ```text
 .
+├── SKILL.md                   # Agent Skills 必需入口
+├── agents/
+│   └── openai.yaml            # 可选 Codex 展示元数据
+├── assets/                    # 多语言模板
+├── references/                # 多语言建档流程
 ├── AGENTS.md                  # 供维护本仓库的编程 Agent 使用
 ├── CLAUDE.md                  # 导入同一份维护指令
 ├── README.md
 ├── README.zh-CN.md
-├── LICENSE
-└── skills/
-    └── setup-agent-guidance/
-        ├── SKILL.md           # Agent Skills 必需入口
-        ├── agents/
-        │   └── openai.yaml    # 可选 Codex 展示元数据
-        ├── assets/            # 多语言模板
-        └── references/        # 多语言建档流程
+└── LICENSE
 ```
 
-真正可安装的单元是 `skills/setup-agent-guidance/`，不是仓库根目录。
+仓库根目录就是可安装的 Skill 包。仓库根目录的维护文件会随 Skill 一起分发；目标项目模板放在 `assets/` 下。
 
 ## 安装
 
@@ -43,41 +41,41 @@
 
 ```text
 使用 $skill-installer 安装
-https://github.com/icho648/setup-agent-guidance/tree/main/skills/setup-agent-guidance
+https://github.com/icho648/setup-agent-guidance
 ```
 
 安装后重启 Codex，使其发现新 Skill。
 
 ### 手动安装
 
-克隆仓库，然后把可安装目录复制或软链接到客户端支持的 Agent Skills 路径。
+克隆仓库，然后把仓库目录复制或软链接到客户端支持的 Agent Skills 路径。
 
 Codex，全局：
 
 ```bash
 mkdir -p "$HOME/.agents/skills"
-cp -R skills/setup-agent-guidance "$HOME/.agents/skills/"
+cp -R /path/to/setup-agent-guidance "$HOME/.agents/skills/"
 ```
 
 Codex，当前项目：
 
 ```bash
 mkdir -p .agents/skills
-cp -R /path/to/setup-agent-guidance/skills/setup-agent-guidance .agents/skills/
+cp -R /path/to/setup-agent-guidance .agents/skills/
 ```
 
 Claude Code，全局：
 
 ```bash
 mkdir -p "$HOME/.claude/skills"
-cp -R skills/setup-agent-guidance "$HOME/.claude/skills/"
+cp -R /path/to/setup-agent-guidance "$HOME/.claude/skills/"
 ```
 
 Claude Code，当前项目：
 
 ```bash
 mkdir -p .claude/skills
-cp -R /path/to/setup-agent-guidance/skills/setup-agent-guidance .claude/skills/
+cp -R /path/to/setup-agent-guidance .claude/skills/
 ```
 
 之后可以显式调用 `setup-agent-guidance`，也可以直接要求 Agent 初始化项目 Agent 指南。
@@ -119,7 +117,7 @@ cp -R /path/to/setup-agent-guidance/skills/setup-agent-guidance .claude/skills/
 使用 Agent Skills 项目的参考校验器：
 
 ```bash
-python -m skills_ref.cli validate ./skills/setup-agent-guidance
+python -m skills_ref.cli validate .
 ```
 
 如果 Codex 开发环境自带 `skill-creator`，也可以使用其中的 `quick_validate.py` 校验目录。
