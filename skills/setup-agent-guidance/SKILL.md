@@ -1,6 +1,14 @@
 ---
 name: setup-agent-guidance
-description: Initialize or refresh durable project agent guidance by detecting AGENTS.md and CLAUDE.md, installing a progressive workflow and localized PLANS.md, then scanning the repository and asking the user before generating project-specific rules and code_review.md. Use when the user asks to initialize, bootstrap, generate, customize, or refresh project agent instructions, AGENTS.md, CLAUDE.md, execution-plan guidance, testing standards, or code-review policy. Do not use for ordinary feature implementation after guidance is already current. Localized triggers: references/triggers.zh-CN.md.
+description: >-
+  Initialize or refresh durable project agent guidance by detecting AGENTS.md and
+  CLAUDE.md, installing a progressive workflow and localized PLANS.md, then scanning
+  the repository and asking the user before generating project-specific rules and
+  code_review.md. Use when the user asks to initialize, bootstrap, generate,
+  customize, or refresh project agent instructions, AGENTS.md, CLAUDE.md,
+  execution-plan guidance, testing standards, or code-review policy. Do not use for
+  ordinary feature implementation after guidance is already current. Localized
+  triggers: references/triggers.zh-CN.md.
 license: MIT
 metadata:
   version: "1.0.0"

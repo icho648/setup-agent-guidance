@@ -119,7 +119,7 @@ cp -R /path/to/setup-agent-guidance/skills/setup-agent-guidance .claude/skills/
 使用 Agent Skills 项目的参考校验器：
 
 ```bash
-skills-ref validate ./skills/setup-agent-guidance
+python -m skills_ref.cli validate ./skills/setup-agent-guidance
 ```
 
 如果 Codex 开发环境自带 `skill-creator`，也可以使用其中的 `quick_validate.py` 校验目录。
