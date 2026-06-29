@@ -27,7 +27,7 @@ jobs:
         run: pip install --quiet skills-ref
 
       - name: Validate skill directory
-        run: skills-ref validate ./skills/setup-agent-guidance
+        run: python -m skills_ref.cli validate ./skills/setup-agent-guidance
 
       - name: Confirm required files exist
         run: |

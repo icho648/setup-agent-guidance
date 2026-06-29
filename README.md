@@ -123,7 +123,7 @@ This “one behavior, localized resources” model is preferable to publishing t
 Using the reference validator from the Agent Skills project:
 
 ```bash
-skills-ref validate ./skills/setup-agent-guidance
+python -m skills_ref.cli validate ./skills/setup-agent-guidance
 ```
 
 For Codex development environments that include the built-in `skill-creator`, its `quick_validate.py` can also validate the directory.
