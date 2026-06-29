@@ -1,0 +1,51 @@
+name: validate skill
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: skills-ref validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install skills-ref
+        run: pip install --quiet skills-ref
+
+      - name: Validate skill directory
+        run: skills-ref validate ./skills/setup-agent-guidance
+
+      - name: Confirm required files exist
+        run: |
+          set -e
+          test -f skills/setup-agent-guidance/SKILL.md
+          test -d skills/setup-agent-guidance/references
+          test -d skills/setup-agent-guidance/assets
+          echo "Layout OK"
+
+      - name: Confirm description length
+        run: |
+          python - <<'PY'
+          import re, pathlib
+          text = pathlib.Path("skills/setup-agent-guidance/SKILL.md").read_text()
+          m = re.match(r"---\n(.*?)\n---", text, re.S)
+          assert m, "missing frontmatter"
+          desc = re.search(r"^description:\s*(.+)$", m.group(1), re.M)
+          assert desc, "missing description"
+          assert len(desc.group(1)) <= 1024, f"description too long: {len(desc.group(1))}"
+          print(f"description length: {len(desc.group(1))} / 1024")
+          PY
