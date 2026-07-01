@@ -42,10 +42,13 @@ Read only files for the selected locale. Do not mix languages inside a generated
 
 ## Phase one: install the generic core
 
-Read the selected `assets/AGENTS.<locale>.template.md` and every target instruction file completely, then install the template's `agent-guidance:core` block.
+Read the selected `assets/AGENTS.<locale>.template.md` and every target instruction file completely, then install the template's `agent-guidance:core` block. The Core block is version-stamped; the marker format is `<!-- agent-guidance:core:version=<X.Y.Z>:start -->` and `:end`.
 
-- When both Core markers occur exactly once, update only the content between them; skip when it already matches.
-- When neither Core marker exists, append the Core block at the end of the file.
+- When both Core markers occur exactly once:
+  - If the installed version matches the template version, skip the block.
+  - If the installed version differs, replace only the content between the markers with the new version-stamped block, and report the upgrade in the final summary so the user can record it in their changelog.
+  - If the installed version is missing or unparseable, treat the version as unknown, replace the block, and report the change.
+- When neither Core marker exists, append the Core block at the end of the file. The new block starts with a `version=<X.Y.Z>` line so the next run can detect upgrades.
 - When markers are missing, reversed, or duplicated, stop modifying that file and report the problem. Do not guess a repair.
 - Preserve all content outside the managed block and preserve the predominant newline style.
 - If a legacy `workflow-gearbox:start/end` block exists and both markers are complete and unique, remove it before installing the new Core. If the old markers are malformed, stop and report.
@@ -67,8 +70,9 @@ Read `references/project-onboarding.<locale>.md`, the project block in `assets/A
 3. From the answers, draft:
    - an `agent-guidance:project` block for each target instruction file;
    - repository-root `code_review.md`.
-4. Show the proposed content or diff and obtain explicit user confirmation before writing.
-5. If the user defers onboarding, stop phase two, preserve phase-one changes, and do not create a generic `code_review.md`.
+4. Strip every placeholder and generation note from the drafted content. In `code_review.md`, also remove scaffold headings such as "Project quality gates" when no confirmed command exists for that row. Do not copy the template's placeholders into a target repository.
+5. Show the proposed content or diff and obtain explicit user confirmation before writing.
+6. If the user defers onboarding, stop phase two, preserve phase-one changes, and do not create a generic `code_review.md`.
 
 Treat an existing `agent-guidance:project` block or `code_review.md` as user-owned project policy: propose diffs and never overwrite without confirmation. After generating `code_review.md`, the project block must require agents to read it completely for code review and pre-completion review.
 
@@ -77,7 +81,7 @@ Treat an existing `agent-guidance:project` block or `code_review.md` as user-own
 Confirm:
 
 - The correct target instruction files were selected and no redundant entry was created.
-- Core markers are complete and unique.
+- Core markers are complete, unique, and their `version=<X.Y.Z>` segment is parseable.
 - Project markers, when present, are complete and unique.
 - Existing user content was not lost.
 - `PLANS.md` and an existing `code_review.md` were not silently overwritten.

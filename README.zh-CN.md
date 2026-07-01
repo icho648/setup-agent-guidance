@@ -24,6 +24,7 @@
 │   └── openai.yaml            # 可选 Codex 展示元数据
 ├── assets/                    # 多语言模板
 ├── references/                # 多语言建档流程
+├── .github/workflows/         # validate.yml 与 release.yml
 ├── AGENTS.md                  # 供维护本仓库的编程 Agent 使用
 ├── CLAUDE.md                  # 导入同一份维护指令
 ├── README.md
@@ -80,6 +81,8 @@ cp -R /path/to/setup-agent-guidance .claude/skills/
 
 之后可以显式调用 `setup-agent-guidance`，也可以直接要求 Agent 初始化项目 Agent 指南。
 
+发布 `.skill` 归档时，请在 Actions 页面手动触发 `.github/workflows/release.yml`（workflow_dispatch），或推送 `v*` tag；不要把预打包产物提交到仓库。
+
 ## 通用 Agent Skills 格式
 
 本项目遵循 [Agent Skills 规范](https://agentskills.io/specification)：
@@ -121,6 +124,10 @@ python -m skills_ref.cli validate .
 ```
 
 如果 Codex 开发环境自带 `skill-creator`，也可以使用其中的 `quick_validate.py` 校验目录。
+
+仓库自带的 `.github/workflows/validate.yml` 会在每次 push 与 PR 时运行同样的检查，破坏 Skill 的改动会被 CI 自动拦截。
+
+另外还有 `.github/workflows/release.yml`：在手动触发（workflow_dispatch）或推送 `v*` tag 时把 Skill 打包成 `.skill` 归档，并把它作为附件挂到对应的 GitHub Release。手动触发用于不打 tag 就拿到预发布产物；tag 触发用于发布正式版本。
 
 发布前至少在全新会话中测试一个英文提示和一个中文提示。触发是否正确、执行结果是否正确要分别验证。
 

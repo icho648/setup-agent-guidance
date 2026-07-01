@@ -28,6 +28,7 @@ It installs a small workflow “gearbox” into the project's existing agent ins
 │   └── openai.yaml            # optional Codex UI metadata
 ├── assets/                    # localized templates
 ├── references/                # localized onboarding procedure
+├── .github/workflows/         # validate.yml and release.yml
 ├── AGENTS.md                  # maintenance instructions for coding agents
 ├── CLAUDE.md                  # imports the same maintenance instructions
 ├── README.md
@@ -84,6 +85,8 @@ cp -R /path/to/setup-agent-guidance .claude/skills/
 
 Then invoke `setup-agent-guidance` explicitly or ask the agent to initialize project agent guidance.
 
+To publish a packaged `.skill` archive, trigger `.github/workflows/release.yml` from the Actions tab (workflow_dispatch) or push a `v*` tag; do not commit prebuilt archives into the repository.
+
 ## Portable Agent Skills format
 
 The package follows the [Agent Skills specification](https://agentskills.io/specification):
@@ -127,6 +130,8 @@ python -m skills_ref.cli validate .
 For Codex development environments that include the built-in `skill-creator`, its `quick_validate.py` can also validate the directory.
 
 This repository also ships a GitHub Actions workflow at `.github/workflows/validate.yml` that runs the same check on every push and pull request, so PRs that break the skill will fail CI automatically.
+
+A second workflow at `.github/workflows/release.yml` packages the skill as a `.skill` archive on `workflow_dispatch` (manual button) or on every `v*` tag push, and attaches the archive to the matching GitHub Release. Use the manual run to produce a pre-release artifact without tagging; use the tag flow for a permanent versioned release.
 
 Before release, test at least one English and one Chinese prompt in fresh sessions. Validate two things independently: whether the skill triggers when expected and whether the generated files match the intended behavior.
 

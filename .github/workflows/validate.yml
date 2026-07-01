@@ -24,10 +24,10 @@ jobs:
           python-version: "3.12"
 
       - name: Install skills-ref
-        run: pip install --quiet skills-ref
+        run: pip install --quiet skills-ref pyyaml
 
       - name: Validate skill directory
-        run: python -m skills_ref.cli validate .
+        run: python -m skills_ref.cli validate "$(pwd)"
 
       - name: Confirm required files exist
         run: |
@@ -41,26 +41,16 @@ jobs:
       - name: Confirm description length
         run: |
           python - <<'PY'
-          import re, pathlib
+          import pathlib
+          import yaml
+
           text = pathlib.Path("SKILL.md").read_text()
-          m = re.match(r"---\n(.*?)\n---", text, re.S)
-          assert m, "missing frontmatter"
-          frontmatter = m.group(1).splitlines()
-          desc = None
-          for i, line in enumerate(frontmatter):
-              if line.startswith("description:"):
-                  value = line.split(":", 1)[1].strip()
-                  if value in {">-", "|"}:
-                      lines = []
-                      for cont in frontmatter[i + 1:]:
-                          if cont and not cont.startswith(" "):
-                              break
-                          lines.append(cont.strip())
-                      desc = " ".join(lines).strip()
-                  else:
-                      desc = value
-                  break
-          assert desc, "missing description"
+          assert text.startswith("---\n"), "missing frontmatter"
+          end = text.find("\n---", 4)
+          assert end != -1, "unterminated frontmatter"
+          front = yaml.safe_load(text[4:end])
+          desc = (front or {}).get("description")
+          assert isinstance(desc, str) and desc.strip(), "missing description"
           assert len(desc) <= 1024, f"description too long: {len(desc)}"
           print(f"description length: {len(desc)} / 1024")
           PY

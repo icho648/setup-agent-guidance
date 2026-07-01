@@ -2,7 +2,7 @@
 
 This file contains two independent regions. `core` is the generic block that may be installed and upgraded automatically. `project-template` is the shape used to generate project-specific guidance interactively; never copy its placeholders verbatim into a target repository.
 
-<!-- agent-guidance:core:start -->
+<!-- agent-guidance:core:version=1.0.0:start -->
 ## Agent Engineering Workflow
 
 ### Workflow Gearbox
@@ -12,7 +12,7 @@ The workflow gearbox is a task-classification rule, not an extra tool. At the st
 - **G1 Direct execution**: The task is local, clear, and low risk. Make the change and run relevant verification.
 - **G2 Plan first**: The task is complex, ambiguous, or spans several related parts. Explore and clarify first, then produce a reviewable plan. If the current agent supports a Plan mode, use it according to that product or suggest that the user enable it.
 - **G3 ExecPlan**: The task may take hours, cross modules or sessions, require pause-and-resume continuity, or contain significant technical unknowns. Before implementation, read the repository-root `PLANS.md` completely and create and maintain a task-specific ExecPlan. Follow the project's existing path convention; otherwise use `plans/<task-slug>.md`.
-- **G4 Specification governance**: The requirement needs a durable product specification, multiple approvals, an audit trail, or cross-team coordination. Use the SDD, OpenSpec, or equivalent process already adopted by the project. Do not install a new governance system without user approval.
+- **G4 Specification governance**: The requirement needs a durable product specification, multiple approvals, an audit trail, or cross-team coordination. Use the SDD, OpenSpec, Spec Kit, or equivalent process already adopted by the project. Do not install a new governance system without user approval.
 
 If the current gear becomes insufficient during execution, pause implementation and shift up. If the task becomes smaller, later ceremony may be reduced, but do not discard decisions, verification evidence, or recovery information already recorded.
 
@@ -23,7 +23,7 @@ Before claiming that a fix, implementation, test, or task is complete, run fresh
 ### Debug root causes first
 
 For defects, test failures, or unexpected behavior, first reproduce the problem reliably and locate the root cause, then change the implementation. Do not stack patches without validating the hypothesis behind each one.
-<!-- agent-guidance:core:end -->
+<!-- agent-guidance:core:version=1.0.0:end -->
 
 <!-- agent-guidance:project-template:start -->
 ## Project Guidance
