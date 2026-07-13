@@ -1,0 +1,49 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "icho648-skills",
+  "description": "Searchable collection of Agent Skills by icho648: durable project agent guidance setup and grounded explanation.",
+  "owner": {
+    "name": "icho648",
+    "url": "https://github.com/icho648"
+  },
+  "plugins": [
+    {
+      "name": "setup-agent-guidance",
+      "description": "Initialize or refresh durable project agent guidance: detect AGENTS.md and CLAUDE.md, install a progressive workflow and PLANS.md, then scan the repository to draft project-specific rules and code_review.md with explicit user confirmation.",
+      "source": "./plugins/setup-agent-guidance",
+      "category": "productivity",
+      "homepage": "https://github.com/icho648/skills/tree/main/plugins/setup-agent-guidance",
+      "author": {
+        "name": "icho648",
+        "url": "https://github.com/icho648"
+      },
+      "keywords": [
+        "agents",
+        "agentsmd",
+        "claudemd",
+        "guidance",
+        "onboarding",
+        "code-review",
+        "execplan"
+      ]
+    },
+    {
+      "name": "grounded-explainer",
+      "description": "Explain an object's unique core and necessary implementation starting from a concrete scenario and the existing problem it solves. Triggered only by explicit $grounded-explainer invocation.",
+      "source": "./plugins/grounded-explainer",
+      "category": "productivity",
+      "homepage": "https://github.com/icho648/skills/tree/main/plugins/grounded-explainer",
+      "author": {
+        "name": "icho648",
+        "url": "https://github.com/icho648"
+      },
+      "keywords": [
+        "explanation",
+        "learning",
+        "mental-model",
+        "concept",
+        "implementation"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "name": "setup-agent-guidance",
+  "version": "1.0.0",
+  "description": "Initialize or refresh durable project agent guidance: detect AGENTS.md and CLAUDE.md, install a progressive workflow and PLANS.md, then scan the repository to draft project-specific rules and code_review.md with explicit user confirmation.",
+  "author": {
+    "name": "icho648",
+    "url": "https://github.com/icho648"
+  },
+  "homepage": "https://github.com/icho648/skills/tree/main/plugins/setup-agent-guidance",
+  "license": "MIT"
+}

@@ -1,4 +1,4 @@
-name: validate skill
+name: validate skills
 
 on:
   push:
@@ -26,31 +26,78 @@ jobs:
       - name: Install skills-ref
         run: pip install --quiet skills-ref pyyaml
 
-      - name: Validate skill directory
-        run: python -m skills_ref.cli validate "$(pwd)"
-
-      - name: Confirm required files exist
+      - name: Validate every skill package
         run: |
           set -e
-          test -f SKILL.md
-          test -d references
-          test -d assets
-          test -d agents
-          echo "Layout OK"
+          shopt -s nullglob
+          skills=(plugins/*/skills/*/)
+          if [ "${#skills[@]}" -eq 0 ]; then
+            echo "No skill packages found under plugins/*/skills/*/" >&2
+            exit 1
+          fi
+          for skill in "${skills[@]}"; do
+            echo "::group::Validating ${skill}"
+            python -m skills_ref.cli validate "$(pwd)/${skill%/}"
+            echo "::endgroup::"
+          done
 
-      - name: Confirm description length
+      - name: Validate marketplace and plugin manifests
+        run: |
+          python - <<'PY'
+          import json
+          import pathlib
+
+          root = pathlib.Path(".")
+          marketplace = root / ".claude-plugin" / "marketplace.json"
+          assert marketplace.is_file(), "missing .claude-plugin/marketplace.json"
+          data = json.loads(marketplace.read_text())
+
+          assert "name" in data and data["name"], "marketplace.json missing name"
+          assert "plugins" in data and isinstance(data["plugins"], list) and data["plugins"], \
+              "marketplace.json must list at least one plugin"
+
+          for plug in data["plugins"]:
+              assert "name" in plug and plug["name"], "plugin entry missing name"
+              assert "description" in plug and plug["description"], \
+                  f"plugin {plug.get('name')} missing description"
+              source = plug.get("source")
+              assert isinstance(source, str) and source.startswith("./"), \
+                  f"plugin {plug['name']} source must be a local './...' path"
+              plug_dir = (root / source).resolve()
+              assert plug_dir.is_dir(), f"plugin {plug['name']} source {source} does not exist"
+              manifest = plug_dir / ".claude-plugin" / "plugin.json"
+              assert manifest.is_file(), f"plugin {plug['name']} missing .claude-plugin/plugin.json"
+              mdata = json.loads(manifest.read_text())
+              assert mdata.get("name") == plug["name"], \
+                  f"plugin {plug['name']} plugin.json name mismatch: {mdata.get('name')}"
+              skill_root = plug_dir / "skills" / plug["name"]
+              assert skill_root.is_dir(), \
+                  f"plugin {plug['name']} missing skills/{plug['name']}/"
+              assert (skill_root / "SKILL.md").is_file(), \
+                  f"plugin {plug['name']} missing SKILL.md"
+              print(f"OK: {plug['name']} -> {source}")
+
+          names = [p["name"] for p in data["plugins"]]
+          assert len(names) == len(set(names)), f"duplicate plugin names: {names}"
+          print(f"marketplace {data['name']} lists {len(names)} plugin(s): {names}")
+          PY
+
+      - name: Confirm SKILL.md description length
         run: |
           python - <<'PY'
           import pathlib
           import yaml
 
-          text = pathlib.Path("SKILL.md").read_text()
-          assert text.startswith("---\n"), "missing frontmatter"
-          end = text.find("\n---", 4)
-          assert end != -1, "unterminated frontmatter"
-          front = yaml.safe_load(text[4:end])
-          desc = (front or {}).get("description")
-          assert isinstance(desc, str) and desc.strip(), "missing description"
-          assert len(desc) <= 1024, f"description too long: {len(desc)}"
-          print(f"description length: {len(desc)} / 1024")
+          skills = sorted(pathlib.Path(".").glob("plugins/*/skills/*/SKILL.md"))
+          assert skills, "no SKILL.md found"
+          for skill in skills:
+              text = skill.read_text()
+              assert text.startswith("---\n"), f"{skill}: missing frontmatter"
+              end = text.find("\n---", 4)
+              assert end != -1, f"{skill}: unterminated frontmatter"
+              front = yaml.safe_load(text[4:end])
+              desc = (front or {}).get("description")
+              assert isinstance(desc, str) and desc.strip(), f"{skill}: missing description"
+              assert len(desc) <= 1024, f"{skill}: description too long ({len(desc)})"
+              print(f"{skill}: description length {len(desc)} / 1024")
           PY
