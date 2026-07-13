@@ -14,11 +14,11 @@ This repository is a Claude Code **plugin marketplace** that hosts one or more s
 ## Change rules
 
 - Update both locale variants in the same change whenever behavior, headings, markers, placeholders, or requirements change (applies to `setup-agent-guidance` asset/reference pairs).
-- Preserve the managed markers exactly: `agent-guidance:core` and `agent-guidance:project-template`.
+- Preserve the managed markers exactly: `agent-guidance:core` and `agent-guidance:project-template` (applies to `setup-agent-guidance`).
 - Keep each `SKILL.md` concise and route detailed procedures to its `references/` and static templates to its `assets/`.
 - Keep skills runtime-free unless a future requirement demonstrably cannot be implemented with agent-native file operations.
 - Do not introduce platform-specific frontmatter into a `SKILL.md`; optional client metadata belongs in its client-specific directory (e.g. `agents/openai.yaml`).
-- Preserve the English ExecPlan source and the Chinese translation in semantic lockstep.
+- Preserve the English ExecPlan source and the Chinese translation in semantic lockstep (applies to `setup-agent-guidance`).
 - When adding, renaming, or removing a plugin, update `marketplace.json` and the plugin's `plugin.json` in the same change, and keep the plugin directory name, the `source` path, the `plugin.json` name, and the skill directory name consistent.
 - Keep `marketplace.json` descriptions in sync with each plugin's `plugin.json` description.
 

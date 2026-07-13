@@ -24,7 +24,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install skills-ref
-        run: pip install --quiet skills-ref pyyaml
+        run: pip install --quiet skills-ref
 
       - name: Validate every skill package
         run: |
@@ -82,22 +82,27 @@ jobs:
           print(f"marketplace {data['name']} lists {len(names)} plugin(s): {names}")
           PY
 
-      - name: Confirm SKILL.md description length
+      - name: Verify SKILL.md relative path references resolve
         run: |
           python - <<'PY'
           import pathlib
-          import yaml
+          import re
 
-          skills = sorted(pathlib.Path(".").glob("plugins/*/skills/*/SKILL.md"))
+          root = pathlib.Path(".")
+          skills = sorted(root.glob("plugins/*/skills/*/SKILL.md"))
           assert skills, "no SKILL.md found"
           for skill in skills:
+              skill_dir = skill.parent
               text = skill.read_text()
-              assert text.startswith("---\n"), f"{skill}: missing frontmatter"
-              end = text.find("\n---", 4)
-              assert end != -1, f"{skill}: unterminated frontmatter"
-              front = yaml.safe_load(text[4:end])
-              desc = (front or {}).get("description")
-              assert isinstance(desc, str) and desc.strip(), f"{skill}: missing description"
-              assert len(desc) <= 1024, f"{skill}: description too long ({len(desc)})"
-              print(f"{skill}: description length {len(desc)} / 1024")
+              refs = set()
+              for m in re.finditer(r'(?<![\w/])((?:references|assets)/[A-Za-z0-9_.\-/]+)', text):
+                  ref = m.group(1).rstrip('.,;:)]/').rstrip('/')
+                  if not ref or '.' not in ref.rsplit('/', 1)[-1]:
+                      continue
+                  refs.add(ref)
+              for ref in sorted(refs):
+                  target = skill_dir / ref
+                  assert target.exists(), \
+                      f"{skill}: referenced path '{ref}' does not resolve from {skill_dir}"
+              print(f"{skill}: {len(refs)} referenced path(s) OK")
           PY

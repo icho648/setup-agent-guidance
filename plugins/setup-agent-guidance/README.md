@@ -127,7 +127,7 @@ A second workflow at `.github/workflows/release.yml` packages the skill as a `.s
 
 Before release, test at least one English and one Chinese prompt in fresh sessions. Validate two things independently: whether the skill triggers when expected and whether the generated files match the intended behavior.
 
-Chinese trigger conditions live in `references/triggers.zh-CN.md` and are loaded only when the project or the user request uses Chinese. The English `description` in `SKILL.md` references that file so the frontmatter stays single-language.
+Chinese trigger conditions live in `skills/setup-agent-guidance/references/triggers.zh-CN.md` and are loaded only when the project or the user request uses Chinese. The English `description` in `SKILL.md` references that file so the frontmatter stays single-language.
 
 ## Sources
 

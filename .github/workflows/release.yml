@@ -13,7 +13,7 @@ on:
       - "v*"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   package:
@@ -29,7 +29,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install skills-ref
-        run: pip install --quiet skills-ref pyyaml
+        run: pip install --quiet skills-ref
 
       - name: Validate every skill package
         run: |
@@ -61,9 +61,14 @@ jobs:
           skills=(plugins/*/skills/*/)
           for skill in "${skills[@]}"; do
             name="$(basename "${skill%/}")"
-            archive="dist/${name}-${{ steps.name.outputs.suffix }}.skill"
-            ( cd "${skill}" && zip -r "${GITHUB_WORKSPACE}/${archive}" . \
+            archive="${GITHUB_WORKSPACE}/dist/${name}-${{ steps.name.outputs.suffix }}.skill"
+            plugin_dir="$(cd "${skill%/}/../.." && pwd)"
+            stage="$(mktemp -d)"
+            cp -R "${skill%/}/." "${stage}/"
+            [ -f "${plugin_dir}/LICENSE" ] && cp "${plugin_dir}/LICENSE" "${stage}/LICENSE"
+            ( cd "${stage}" && zip -r "${archive}" . \
                 -x "*.swp" -x ".DS_Store" -x ".*" )
+            rm -rf "${stage}"
             echo "Built ${archive}"
           done
           ls -la dist/

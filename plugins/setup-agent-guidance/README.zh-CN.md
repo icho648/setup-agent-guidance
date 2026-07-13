@@ -1,5 +1,9 @@
 # setup-agent-guidance
 
+[![validate skills](https://github.com/icho648/skills/actions/workflows/validate.yml/badge.svg)](../../.github/workflows/validate.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![Agent Skills](https://img.shields.io/badge/Agent%20Skills-1.0-blue)](https://agentskills.io/specification)
+
 [English](README.md)
 
 这是一个可安装的 Agent Skill，用来为代码项目初始化长期有效的 Agent 指南，同时避免把每个任务都强制塞进重量级规格流程。
@@ -122,6 +126,8 @@ python -m skills_ref.cli validate plugins/setup-agent-guidance/skills/setup-agen
 另外还有 `.github/workflows/release.yml`：在手动触发（workflow_dispatch）或推送 `v*` tag 时把 Skill 打包成 `.skill` 归档，并把它作为附件挂到对应的 GitHub Release。手动触发用于不打 tag 就拿到预发布产物；tag 触发用于发布正式版本。
 
 发布前至少在全新会话中测试一个英文提示和一个中文提示。触发是否正确、执行结果是否正确要分别验证。
+
+中文触发条件位于 `skills/setup-agent-guidance/references/triggers.zh-CN.md`，仅当项目或用户请求使用中文时加载。`SKILL.md` 中的英文 `description` 引用该文件，使 frontmatter 保持单一语言。
 
 ## 参考来源
 
