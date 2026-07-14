@@ -7,7 +7,7 @@
 
 ## 它做什么
 
-- 仅在用户**显式调用 `$grounded-explainer`** 时触发；不允许隐式触发，普通提及关键词或技能名都不算。
+- 仅在用户**显式调用**时触发（Codex 为 `$grounded-explainer`，Claude Code 市场安装后为 `/grounded-explainer:grounded-explainer`）；不允许隐式触发，普通提及关键词或技能名都不算。
 - 触发后先判断当前问题中对象的真正核心，再决定是否展开实现。
 - 区分“同类对象的普通能力”与“当前语境中的独特核心”，并明确说出判断。
 - 从具体场景讲起，不做概念巡礼；必要时用流程图、伪代码或精确代码打开对象内部机制。
@@ -15,8 +15,16 @@
 
 ## 触发方式
 
+Codex：
+
 ```
 $grounded-explainer <要解释的对象>
+```
+
+Claude Code（经插件市场安装后）：
+
+```
+/grounded-explainer:grounded-explainer <要解释的对象>
 ```
 
 ## 安装

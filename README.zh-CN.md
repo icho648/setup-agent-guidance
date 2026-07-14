@@ -13,7 +13,7 @@
 | 插件 | 技能 | 作用 |
 | --- | --- | --- |
 | [setup-agent-guidance](plugins/setup-agent-guidance/) | `setup-agent-guidance` | 初始化或刷新持久的项目代理指导：检测 `AGENTS.md`/`CLAUDE.md`，安装渐进式工作流和 `PLANS.md`，然后只读扫描仓库，在用户确认后生成项目专属规则与 `code_review.md`。 |
-| [grounded-explainer](plugins/grounded-explainer/) | `grounded-explainer` | 从具体场景和既有问题出发，完整解释对象的独特核心与必要实现机制。仅在显式调用 `$grounded-explainer` 时触发。 |
+| [grounded-explainer](plugins/grounded-explainer/) | `grounded-explainer` | 从具体场景和既有问题出发，完整解释对象的独特核心与必要实现机制。仅在显式调用时触发（`$grounded-explainer` 或 `/grounded-explainer:grounded-explainer`）。 |
 
 ## 安装
 
@@ -51,6 +51,7 @@ Codex 全局：
 ```bash
 mkdir -p "$HOME/.agents/skills"
 cp -R plugins/setup-agent-guidance/skills/setup-agent-guidance "$HOME/.agents/skills/"
+cp -R plugins/grounded-explainer/skills/grounded-explainer "$HOME/.agents/skills/"
 ```
 
 随后显式调用技能（`$setup-agent-guidance` 或 `$grounded-explainer`）。

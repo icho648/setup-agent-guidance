@@ -1,6 +1,6 @@
 ---
 name: grounded-explainer
-description: 仅在用户显式调用 $grounded-explainer 时使用；不允许隐式触发。普通解释请求、相关关键词或技能名称的普通提及均不得触发，除非当前请求中同时包含显式的 $grounded-explainer 调用。触发后，从具体场景和既有问题出发，给出简单、直接、准确、完整而聚焦的解释；必要时展开核心实现。
+description: 仅在用户显式调用时使用（Codex 为 `$grounded-explainer`，Claude Code 市场安装后为 `/grounded-explainer:grounded-explainer`）；不允许隐式触发。普通解释请求、相关关键词或技能名称的普通提及均不得触发，除非当前请求中同时包含显式调用。触发后，从具体场景和既有问题出发，给出简单、直接、准确、完整而聚焦的解释；必要时展开核心实现。
 ---
 
 # 落地解释器

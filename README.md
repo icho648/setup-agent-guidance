@@ -13,7 +13,7 @@ A searchable Claude Code **plugin marketplace** hosting portable Agent Skills by
 | Plugin | Skill | What it does |
 | --- | --- | --- |
 | [setup-agent-guidance](plugins/setup-agent-guidance/) | `setup-agent-guidance` | Initialize or refresh durable project agent guidance: detect `AGENTS.md`/`CLAUDE.md`, install a progressive workflow and `PLANS.md`, then scan the repository to draft project-specific rules and `code_review.md` with explicit user confirmation. |
-| [grounded-explainer](plugins/grounded-explainer/) | `grounded-explainer` | Explain an object's unique core and necessary implementation from a concrete scenario and the existing problem it solves. Triggered only by explicit `$grounded-explainer` invocation. |
+| [grounded-explainer](plugins/grounded-explainer/) | `grounded-explainer` | Explain an object's unique core and necessary implementation from a concrete scenario and the existing problem it solves. Triggered only by explicit invocation (`$grounded-explainer` or `/grounded-explainer:grounded-explainer`). |
 
 ## Install
 
@@ -51,6 +51,7 @@ Codex, global:
 ```bash
 mkdir -p "$HOME/.agents/skills"
 cp -R plugins/setup-agent-guidance/skills/setup-agent-guidance "$HOME/.agents/skills/"
+cp -R plugins/grounded-explainer/skills/grounded-explainer "$HOME/.agents/skills/"
 ```
 
 Then invoke the skill explicitly (`$setup-agent-guidance` or `$grounded-explainer`).
