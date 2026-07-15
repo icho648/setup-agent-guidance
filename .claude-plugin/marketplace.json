@@ -3,8 +3,7 @@
   "name": "icho648-skills",
   "description": "Searchable collection of Agent Skills by icho648: durable project agent guidance setup and grounded explanation.",
   "owner": {
-    "name": "icho648",
-    "url": "https://github.com/icho648"
+    "name": "icho648"
   },
   "plugins": [
     {
