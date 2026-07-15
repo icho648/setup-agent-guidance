@@ -18,7 +18,7 @@ This repository is a Claude Code and Codex **plugin marketplace** that hosts one
 - Preserve the managed markers exactly: `agent-guidance:core` and `agent-guidance:project-template` (applies to `setup-agent-guidance`).
 - Keep each `SKILL.md` concise and route detailed procedures to its `references/` and static templates to its `assets/`.
 - Keep skills runtime-free unless a future requirement demonstrably cannot be implemented with agent-native file operations.
-- Do not introduce platform-specific frontmatter into a `SKILL.md`; optional client metadata belongs in its client-specific directory (e.g. `agents/openai.yaml`).
+- Do not introduce platform-specific frontmatter into a `SKILL.md`; optional client metadata belongs in its client-specific directory (e.g. `agents/openai.yaml`). Invocation-control frontmatter that enforces a skill's declared invocation contract is permitted in `SKILL.md`, for example `disable-model-invocation: true` for an explicit-only skill under Claude Code, which has no client-specific directory equivalent.
 - Preserve the English ExecPlan source and the Chinese translation in semantic lockstep (applies to `setup-agent-guidance`).
 - When adding, renaming, or removing a plugin, update both marketplace registries and both client manifests in the same change, and keep the plugin directory name, source paths, manifest names, and skill directory name consistent.
 - Keep marketplace descriptions in sync with the corresponding client manifests and canonical skill behavior.
