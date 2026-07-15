@@ -1,6 +1,6 @@
 ---
 name: grounded-explainer
-description: 仅在用户显式调用时使用（Codex 为 `$grounded-explainer`，Claude Code 市场安装后为 `/icho648-plugin:grounded-explainer`）；不允许隐式触发。普通解释请求、相关关键词或技能名称的普通提及均不得触发，除非当前请求中同时包含显式调用。触发后，从具体场景和既有问题出发，给出简单、直接、准确、完整而聚焦的解释；必要时展开核心实现。
+description: 仅在用户显式调用时使用（Codex 为 `$grounded-explainer`；Claude Code 插件安装为 `/icho648-plugin:grounded-explainer`，手动安装为 `/grounded-explainer`）；不允许隐式触发。普通解释请求、相关关键词或技能名称的普通提及均不得触发，除非当前请求中同时包含显式调用。触发后，从具体场景和既有问题出发，给出简单、直接、准确、完整而聚焦的解释；必要时展开核心实现。
 ---
 
 # 落地解释器
@@ -9,7 +9,7 @@ description: 仅在用户显式调用时使用（Codex 为 `$grounded-explainer`
 
 ## 工作流
 
-1. 确认当前请求包含 `$grounded-explainer` 或 `/icho648-plugin:grounded-explainer`；否则不启用本技能。
+1. 确认当前请求包含 `$grounded-explainer`、`/icho648-plugin:grounded-explainer` 或 `/grounded-explainer`；否则不启用本技能。
 2. 完整读取并遵循 `references/explanation-workflow.md`。其中的“权威回答顺序”是唯一结构来源，不在其他章节另建重复流程。
 3. 只检查足以验证核心与边界的源码、配置、日志或一手文档；无法验证对象内部实现时明确说明，不用宿主包装层或架构猜测代替。
 4. 根据用户目标决定是否展开实现，以及使用自然语言、简单文本流程、Mermaid、伪代码或精确代码；不要机械添加任何形式。

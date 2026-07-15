@@ -93,7 +93,7 @@ cp -R plugins/icho648-plugin/skills/setup-agent-guidance "$HOME/.agents/skills/"
 cp -R plugins/icho648-plugin/skills/grounded-explainer "$HOME/.agents/skills/"
 ```
 
-Then invoke a skill explicitly (`$setup-agent-guidance` or `$grounded-explainer`), or ask the agent to initialize project agent guidance.
+Then invoke a skill explicitly (Claude Code: `/setup-agent-guidance` or `/grounded-explainer`; Codex: `$setup-agent-guidance` or `$grounded-explainer`), or ask the agent to initialize project agent guidance.
 
 To publish packaged `.skill` archives, trigger `.github/workflows/release.yml` from the Actions tab (workflow_dispatch) or push a `v*` tag; do not commit prebuilt archives into the repository.
 

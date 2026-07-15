@@ -61,7 +61,7 @@ cp -R plugins/icho648-plugin/skills/setup-agent-guidance "$HOME/.agents/skills/"
 cp -R plugins/icho648-plugin/skills/grounded-explainer "$HOME/.agents/skills/"
 ```
 
-随后显式调用技能（`$setup-agent-guidance` 或 `$grounded-explainer`）。
+随后显式调用技能（Claude Code：`/setup-agent-guidance` 或 `/grounded-explainer`；Codex：`$setup-agent-guidance` 或 `$grounded-explainer`）。
 
 ## 仓库结构
 

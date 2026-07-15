@@ -61,7 +61,7 @@ cp -R plugins/icho648-plugin/skills/setup-agent-guidance "$HOME/.agents/skills/"
 cp -R plugins/icho648-plugin/skills/grounded-explainer "$HOME/.agents/skills/"
 ```
 
-Then invoke the skill explicitly (`$setup-agent-guidance` or `$grounded-explainer`).
+Then invoke the skill explicitly (Claude Code: `/setup-agent-guidance` or `/grounded-explainer`; Codex: `$setup-agent-guidance` or `$grounded-explainer`).
 
 ## Repository layout
 

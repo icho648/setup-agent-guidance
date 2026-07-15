@@ -93,7 +93,7 @@ cp -R plugins/icho648-plugin/skills/setup-agent-guidance "$HOME/.agents/skills/"
 cp -R plugins/icho648-plugin/skills/grounded-explainer "$HOME/.agents/skills/"
 ```
 
-随后显式调用技能（`$setup-agent-guidance` 或 `$grounded-explainer`），也可以直接要求 Agent 初始化项目 Agent 指南。
+随后显式调用技能（Claude Code：`/setup-agent-guidance` 或 `/grounded-explainer`；Codex：`$setup-agent-guidance` 或 `$grounded-explainer`），也可以直接要求 Agent 初始化项目 Agent 指南。
 
 发布 `.skill` 归档时，请在 Actions 页面手动触发 `.github/workflows/release.yml`（workflow_dispatch），或推送 `v*` tag；不要把预打包产物提交到仓库。
 
