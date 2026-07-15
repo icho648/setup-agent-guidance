@@ -93,7 +93,8 @@ Then invoke the skill explicitly (`$setup-agent-guidance` or `$grounded-explaine
 │           ├── SKILL.md
 │           ├── references/explanation-workflow.md
 │           └── agents/openai.yaml
-├── .github/workflows/            # validate.yml and release.yml
+├── .github/                      # workflows and repository validator
+├── tests/                        # validator regression tests
 ├── AGENTS.md                     # maintenance instructions for coding agents
 ├── CLAUDE.md                     # imports the same maintenance instructions
 ├── README.md
@@ -129,7 +130,7 @@ python -m skills_ref.cli validate plugins/setup-agent-guidance/skills/setup-agen
 python -m skills_ref.cli validate plugins/grounded-explainer/skills/grounded-explainer
 ```
 
-This repository also ships a GitHub Actions workflow at `.github/workflows/validate.yml` that validates every skill plus both marketplace formats on every push and pull request, so PRs that break a skill or marketplace will fail CI automatically.
+This repository also ships a GitHub Actions workflow at `.github/workflows/validate.yml` that validates every skill, both marketplace formats, Codex plugin manifests, localized resource pairs, and relative references on every push and pull request.
 
 A second workflow at `.github/workflows/release.yml` builds a `.skill` archive per skill on `workflow_dispatch` or on every `v*` tag push, and attaches the archives to the matching GitHub Release. Use the manual run to produce a pre-release artifact without tagging; use the tag flow for a permanent versioned release.
 

@@ -93,7 +93,8 @@ cp -R plugins/grounded-explainer/skills/grounded-explainer "$HOME/.agents/skills
 │           ├── SKILL.md
 │           ├── references/explanation-workflow.md
 │           └── agents/openai.yaml
-├── .github/workflows/            # validate.yml 与 release.yml
+├── .github/                      # 工作流与仓库校验器
+├── tests/                        # 校验器回归测试
 ├── AGENTS.md                     # 仓库维护说明
 ├── CLAUDE.md                     # 引用同一份维护说明
 ├── README.md
@@ -129,7 +130,7 @@ python -m skills_ref.cli validate plugins/setup-agent-guidance/skills/setup-agen
 python -m skills_ref.cli validate plugins/grounded-explainer/skills/grounded-explainer
 ```
 
-本仓库还附带 `.github/workflows/validate.yml`，在每次 push 和 pull request 时校验所有技能及两种市场格式，破坏技能或市场的 PR 会自动失败 CI。
+本仓库还附带 `.github/workflows/validate.yml`，在每次 push 和 pull request 时校验所有技能、两种市场格式、Codex 插件清单、本地化资源配对与相对路径引用。
 
 另一份 `.github/workflows/release.yml` 在 `workflow_dispatch` 或每次 `v*` 标签推送时为每个技能构建 `.skill` 归档，并附到对应的 GitHub Release。手动运行用于不打标签产出预发布制品；标签流程用于永久版本发布。
 

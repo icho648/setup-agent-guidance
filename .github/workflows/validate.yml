@@ -24,7 +24,17 @@ jobs:
           python-version: "3.12"
 
       - name: Install skills-ref
-        run: pip install --quiet skills-ref
+        run: pip install --quiet skills-ref pyyaml
+
+      - name: Download pinned plugin-creator validator
+        env:
+          VALIDATOR_SHA256: ebda00d55d7518b127f675f062fb5c6e7a1ffdc0a99df1a55ac594400d7d3228
+          VALIDATOR_URL: https://raw.githubusercontent.com/openai/codex/2e1607ee2fa8099a233df7437adee5f16a741905/codex-rs/skills/src/assets/samples/plugin-creator/scripts/validate_plugin.py
+        run: |
+          curl --fail --location --silent --show-error "$VALIDATOR_URL" \
+            --output "$RUNNER_TEMP/validate_plugin.py"
+          printf '%s  %s\n' "$VALIDATOR_SHA256" "$RUNNER_TEMP/validate_plugin.py" \
+            | sha256sum --check
 
       - name: Validate every skill package
         run: |
@@ -41,7 +51,12 @@ jobs:
             echo "::endgroup::"
           done
 
-      - name: Validate Claude Code and Codex plugin manifests
+      - name: Test repository validator
+        env:
+          PLUGIN_VALIDATOR: ${{ runner.temp }}/validate_plugin.py
+        run: python -m unittest tests/test_validate_repository.py
+
+      - name: Validate marketplace registrations
         run: |
           python - <<'PY'
           import json
@@ -104,27 +119,11 @@ jobs:
           print(f"marketplace {data['name']} lists {len(names)} plugin(s): {names}")
           PY
 
-      - name: Verify SKILL.md relative path references resolve
+      - name: Validate every Codex plugin
         run: |
-          python - <<'PY'
-          import pathlib
-          import re
+          for plugin in plugins/*/; do
+            python "$RUNNER_TEMP/validate_plugin.py" "${plugin%/}"
+          done
 
-          root = pathlib.Path(".")
-          skills = sorted(root.glob("plugins/*/skills/*/SKILL.md"))
-          assert skills, "no SKILL.md found"
-          for skill in skills:
-              skill_dir = skill.parent
-              text = skill.read_text()
-              refs = set()
-              for m in re.finditer(r'(?<![\w/])((?:references|assets)/[A-Za-z0-9_.\-/]+)', text):
-                  ref = m.group(1).rstrip('.,;:)]/').rstrip('/')
-                  if not ref or '.' not in ref.rsplit('/', 1)[-1]:
-                      continue
-                  refs.add(ref)
-              for ref in sorted(refs):
-                  target = skill_dir / ref
-                  assert target.exists(), \
-                      f"{skill}: referenced path '{ref}' does not resolve from {skill_dir}"
-              print(f"{skill}: {len(refs)} referenced path(s) OK")
-          PY
+      - name: Validate paths and localized resources
+        run: python .github/scripts/validate_repository.py

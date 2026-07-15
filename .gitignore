@@ -8,3 +8,4 @@
 
 # Local validation virtualenv.
 .venv/
+__pycache__/
