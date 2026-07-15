@@ -12,7 +12,7 @@ A searchable Claude Code and Codex **plugin marketplace** hosting portable Agent
 
 | Plugin | Skills | What it does |
 | --- | --- | --- |
-| [icho648-plugin](plugins/icho648-plugin/) | `setup-agent-guidance`, `grounded-explainer` | Initialize or refresh durable project agent guidance (detect `AGENTS.md`/`CLAUDE.md`, install a progressive workflow and `PLANS.md`, draft project-specific rules and `code_review.md`), and explain a technical object's unique core from a concrete scenario. The explainer is triggered only by explicit invocation (`$grounded-explainer` or `/grounded-explainer:grounded-explainer`). |
+| [icho648-plugin](plugins/icho648-plugin/) | `setup-agent-guidance`, `grounded-explainer` | Initialize or refresh durable project agent guidance (detect `AGENTS.md`/`CLAUDE.md`, install a progressive workflow and `PLANS.md`, draft project-specific rules and `code_review.md`), and explain a technical object's unique core from a concrete scenario. The explainer is triggered only by explicit invocation (`$grounded-explainer` or `/icho648-plugin:grounded-explainer`). |
 
 ## Install
 

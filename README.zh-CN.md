@@ -12,7 +12,7 @@
 
 | 插件 | 技能 | 作用 |
 | --- | --- | --- |
-| [icho648-plugin](plugins/icho648-plugin/) | `setup-agent-guidance`、`grounded-explainer` | 初始化或刷新持久的项目代理指导（检测 `AGENTS.md`/`CLAUDE.md`，安装渐进式工作流和 `PLANS.md`，生成项目专属规则与 `code_review.md`），以及从具体场景解释对象的独特核心。解释器仅在显式调用时触发（`$grounded-explainer` 或 `/grounded-explainer:grounded-explainer`）。 |
+| [icho648-plugin](plugins/icho648-plugin/) | `setup-agent-guidance`、`grounded-explainer` | 初始化或刷新持久的项目代理指导（检测 `AGENTS.md`/`CLAUDE.md`，安装渐进式工作流和 `PLANS.md`，生成项目专属规则与 `code_review.md`），以及从具体场景解释对象的独特核心。解释器仅在显式调用时触发（`$grounded-explainer` 或 `/icho648-plugin:grounded-explainer`）。 |
 
 ## 安装
 

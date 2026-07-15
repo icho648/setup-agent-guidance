@@ -23,7 +23,7 @@
 
 ### grounded-explainer
 
-从具体场景和既有问题出发，完整解释对象的独特核心与必要实现机制。仅在显式调用时触发：Codex 为 `$grounded-explainer`，Claude Code 为 `/grounded-explainer:grounded-explainer`。
+从具体场景和既有问题出发，完整解释对象的独特核心与必要实现机制。仅在显式调用时触发：Codex 为 `$grounded-explainer`，Claude Code 为 `/icho648-plugin:grounded-explainer`。
 
 - 仅在用户显式调用时触发；普通提及关键词或技能名都不算。
 - 触发后先判断当前问题中对象的真正核心，再决定是否展开实现。

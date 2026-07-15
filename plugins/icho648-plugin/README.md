@@ -23,7 +23,7 @@ Bootstraps durable project guidance without forcing every task through a heavywe
 
 ### grounded-explainer
 
-Explains an object's unique core and necessary implementation starting from a concrete scenario and the existing problem it solves. Triggered only by explicit invocation: `$grounded-explainer` in Codex or `/grounded-explainer:grounded-explainer` in Claude Code.
+Explains an object's unique core and necessary implementation starting from a concrete scenario and the existing problem it solves. Triggered only by explicit invocation: `$grounded-explainer` in Codex or `/icho648-plugin:grounded-explainer` in Claude Code.
 
 - Triggers only on explicit invocation; ordinary mentions of keywords or the skill name do not trigger it.
 - After triggering, judges the object's true core in the current question, then decides whether to expand the implementation.
