@@ -31,6 +31,8 @@
     "developerName": "icho648",
     "category": "Productivity",
     "capabilities": [],
-    "defaultPrompt": "Use $setup-agent-guidance to initialize project agent guidance, or $grounded-explainer to explain a technical object."
+    "defaultPrompt": [
+      "Use $setup-agent-guidance to initialize project agent guidance, or $grounded-explainer to explain a technical object."
+    ]
   }
 }
