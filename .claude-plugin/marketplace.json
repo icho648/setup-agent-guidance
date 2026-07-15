@@ -7,14 +7,13 @@
   },
   "plugins": [
     {
-      "name": "setup-agent-guidance",
-      "description": "Initialize or refresh durable project agent guidance: detect AGENTS.md and CLAUDE.md, install a progressive workflow and PLANS.md, then scan the repository to draft project-specific rules and code_review.md with explicit user confirmation.",
-      "source": "./plugins/setup-agent-guidance",
+      "name": "icho648-plugin",
+      "description": "Durable project agent guidance setup and grounded explanation: initialize AGENTS.md/CLAUDE.md guidance, or explain a technical object's unique core from a concrete scenario.",
+      "source": "./plugins/icho648-plugin",
       "category": "productivity",
-      "homepage": "https://github.com/icho648/skills/tree/main/plugins/setup-agent-guidance",
+      "homepage": "https://github.com/icho648/skills/tree/main/plugins/icho648-plugin",
       "author": {
-        "name": "icho648",
-        "url": "https://github.com/icho648"
+        "name": "icho648"
       },
       "keywords": [
         "agents",
@@ -23,20 +22,7 @@
         "guidance",
         "onboarding",
         "code-review",
-        "execplan"
-      ]
-    },
-    {
-      "name": "grounded-explainer",
-      "description": "Explain an object's unique core and necessary implementation starting from a concrete scenario and the existing problem it solves. Triggered only by explicit invocation: $grounded-explainer in Codex or /grounded-explainer:grounded-explainer in Claude Code.",
-      "source": "./plugins/grounded-explainer",
-      "category": "productivity",
-      "homepage": "https://github.com/icho648/skills/tree/main/plugins/grounded-explainer",
-      "author": {
-        "name": "icho648",
-        "url": "https://github.com/icho648"
-      },
-      "keywords": [
+        "execplan",
         "explanation",
         "learning",
         "mental-model",

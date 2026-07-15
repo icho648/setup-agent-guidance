@@ -6,14 +6,13 @@
 
 [English](README.md)
 
-一个可搜索的 Claude Code 与 Codex **插件市场**，托管 `icho648` 的便携 Agent Skills。把本仓库添加为市场后，即可把任意技能作为插件安装。
+一个可搜索的 Claude Code 与 Codex **插件市场**，托管 `icho648` 的便携 Agent Skills。把本仓库添加为市场后，安装插件即可获得两个技能。
 
 ## 插件
 
 | 插件 | 技能 | 作用 |
 | --- | --- | --- |
-| [setup-agent-guidance](plugins/setup-agent-guidance/) | `setup-agent-guidance` | 初始化或刷新持久的项目代理指导：检测 `AGENTS.md`/`CLAUDE.md`，安装渐进式工作流和 `PLANS.md`，然后只读扫描仓库，在用户确认后生成项目专属规则与 `code_review.md`。 |
-| [grounded-explainer](plugins/grounded-explainer/) | `grounded-explainer` | 从具体场景和既有问题出发，完整解释对象的独特核心与必要实现机制。仅在显式调用时触发（`$grounded-explainer` 或 `/grounded-explainer:grounded-explainer`）。 |
+| [icho648-plugin](plugins/icho648-plugin/) | `setup-agent-guidance`、`grounded-explainer` | 初始化或刷新持久的项目代理指导（检测 `AGENTS.md`/`CLAUDE.md`，安装渐进式工作流和 `PLANS.md`，生成项目专属规则与 `code_review.md`），以及从具体场景解释对象的独特核心。解释器仅在显式调用时触发（`$grounded-explainer` 或 `/grounded-explainer:grounded-explainer`）。 |
 
 ## 安装
 
@@ -21,16 +20,14 @@
 
 ```text
 /plugin marketplace add icho648/skills
-/plugin install setup-agent-guidance@icho648-skills
-/plugin install grounded-explainer@icho648-skills
+/plugin install icho648-plugin@icho648-skills
 ```
 
 或通过 CLI：
 
 ```bash
 claude plugin marketplace add icho648/skills
-claude plugin install setup-agent-guidance@icho648-skills
-claude plugin install grounded-explainer@icho648-skills
+claude plugin install icho648-plugin@icho648-skills
 ```
 
 安装后重启 Claude Code，以便发现新技能。
@@ -39,30 +36,29 @@ claude plugin install grounded-explainer@icho648-skills
 
 ```bash
 codex plugin marketplace add icho648/skills
-codex plugin add setup-agent-guidance@icho648-skills
-codex plugin add grounded-explainer@icho648-skills
+codex plugin add icho648-plugin@icho648-skills
 ```
 
 安装后新建一个 Codex 任务，使其发现插件中的技能。
 
 ### 手动安装
 
-每个插件的技能都是 `plugins/<名>/skills/<名>/` 下的便携 Agent Skills 包。克隆仓库后，把技能目录复制或软链到客户端扫描的位置。
+每个技能都是 `plugins/icho648-plugin/skills/<名>/` 下的便携 Agent Skills 包。克隆仓库后，把技能目录复制或软链到客户端扫描的位置。
 
 Claude Code 全局：
 
 ```bash
 mkdir -p "$HOME/.claude/skills"
-cp -R plugins/setup-agent-guidance/skills/setup-agent-guidance "$HOME/.claude/skills/"
-cp -R plugins/grounded-explainer/skills/grounded-explainer "$HOME/.claude/skills/"
+cp -R plugins/icho648-plugin/skills/setup-agent-guidance "$HOME/.claude/skills/"
+cp -R plugins/icho648-plugin/skills/grounded-explainer "$HOME/.claude/skills/"
 ```
 
 Codex 全局：
 
 ```bash
 mkdir -p "$HOME/.agents/skills"
-cp -R plugins/setup-agent-guidance/skills/setup-agent-guidance "$HOME/.agents/skills/"
-cp -R plugins/grounded-explainer/skills/grounded-explainer "$HOME/.agents/skills/"
+cp -R plugins/icho648-plugin/skills/setup-agent-guidance "$HOME/.agents/skills/"
+cp -R plugins/icho648-plugin/skills/grounded-explainer "$HOME/.agents/skills/"
 ```
 
 随后显式调用技能（`$setup-agent-guidance` 或 `$grounded-explainer`）。
@@ -76,23 +72,21 @@ cp -R plugins/grounded-explainer/skills/grounded-explainer "$HOME/.agents/skills
 ├── .agents/plugins/
 │   └── marketplace.json          # Codex 市场清单
 ├── plugins/
-│   ├── setup-agent-guidance/
-│   │   ├── .claude-plugin/plugin.json
-│   │   ├── .codex-plugin/plugin.json
-│   │   ├── skills/setup-agent-guidance/   # Agent Skills 包
-│   │   │   ├── SKILL.md
-│   │   │   ├── agents/openai.yaml          # 可选 Codex UI 元数据
-│   │   │   ├── assets/                     # 本地化模板
-│   │   │   └── references/                 # 本地化上手流程
-│   │   ├── README.md
-│   │   └── README.zh-CN.md
-│   └── grounded-explainer/
+│   └── icho648-plugin/
 │       ├── .claude-plugin/plugin.json
 │       ├── .codex-plugin/plugin.json
-│       └── skills/grounded-explainer/
-│           ├── SKILL.md
-│           ├── references/explanation-workflow.md
-│           └── agents/openai.yaml
+│       ├── skills/
+│       │   ├── setup-agent-guidance/       # Agent Skills 包
+│       │   │   ├── SKILL.md
+│       │   │   ├── agents/openai.yaml      # 可选 Codex UI 元数据
+│       │   │   ├── assets/                 # 本地化模板
+│       │   │   └── references/             # 本地化上手流程
+│       │   └── grounded-explainer/         # Agent Skills 包
+│       │       ├── SKILL.md
+│       │       ├── references/explanation-workflow.md
+│       │       └── agents/openai.yaml
+│       ├── README.md
+│       └── README.zh-CN.md
 ├── .github/                      # 工作流与仓库校验器
 ├── tests/                        # 校验器回归测试
 ├── AGENTS.md                     # 仓库维护说明
@@ -102,7 +96,7 @@ cp -R plugins/grounded-explainer/skills/grounded-explainer "$HOME/.agents/skills
 └── LICENSE
 ```
 
-仓库根是**市场**。每个 `plugins/<名>/` 目录同时是 Claude Code 与 Codex 插件，内含恰好一个 Agent Skills 包（位于 `skills/<名>/`）。
+仓库根是**市场**。每个 `plugins/<名>/` 目录同时是 Claude Code 与 Codex 插件，内含一个或多个 Agent Skills 包（位于 `skills/<名>/`）。
 
 ## 三套兼容标准
 
@@ -126,8 +120,8 @@ cp -R plugins/grounded-explainer/skills/grounded-explainer "$HOME/.agents/skills
 使用 Agent Skills 项目的参考校验器：
 
 ```bash
-python -m skills_ref.cli validate plugins/setup-agent-guidance/skills/setup-agent-guidance
-python -m skills_ref.cli validate plugins/grounded-explainer/skills/grounded-explainer
+python -m skills_ref.cli validate plugins/icho648-plugin/skills/setup-agent-guidance
+python -m skills_ref.cli validate plugins/icho648-plugin/skills/grounded-explainer
 ```
 
 本仓库还附带 `.github/workflows/validate.yml`，在每次 push 和 pull request 时校验所有技能、两种市场格式、Codex 插件清单、本地化资源配对与相对路径引用。

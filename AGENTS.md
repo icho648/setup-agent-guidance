@@ -1,6 +1,6 @@
 # Repository Agent Guidance
 
-This repository is a Claude Code and Codex **plugin marketplace** that hosts one or more skill plugins. The repository root is the marketplace; each `plugins/<name>/` directory is one plugin and contains exactly one Agent Skills package under `skills/<name>/`. Repository-root maintenance files are shipped alongside the marketplace.
+This repository is a Claude Code and Codex **plugin marketplace** that hosts one or more skill plugins. The repository root is the marketplace; each `plugins/<name>/` directory is one plugin and contains one or more Agent Skills packages under `skills/<name>/`. Repository-root maintenance files are shipped alongside the marketplace.
 
 ## Source of truth
 

@@ -1,0 +1,36 @@
+{
+  "name": "icho648-plugin",
+  "version": "1.0.0",
+  "description": "Durable project agent guidance setup and grounded explanation: initialize AGENTS.md/CLAUDE.md guidance, or explain a technical object's unique core from a concrete scenario.",
+  "author": {
+    "name": "icho648",
+    "url": "https://github.com/icho648"
+  },
+  "homepage": "https://github.com/icho648/skills/tree/main/plugins/icho648-plugin",
+  "repository": "https://github.com/icho648/skills",
+  "license": "MIT",
+  "keywords": [
+    "agents",
+    "agentsmd",
+    "claudemd",
+    "guidance",
+    "onboarding",
+    "code-review",
+    "execplan",
+    "explanation",
+    "learning",
+    "mental-model",
+    "concept",
+    "implementation"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Icho648 Plugin",
+    "shortDescription": "Project agent guidance setup and grounded explanation.",
+    "longDescription": "Two Agent Skills: setup-agent-guidance initializes durable project agent guidance (AGENTS.md/CLAUDE.md, ExecPlan, code-review policy); grounded-explainer explains a technical object's unique core from a concrete scenario.",
+    "developerName": "icho648",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": "Use $setup-agent-guidance to initialize project agent guidance, or $grounded-explainer to explain a technical object."
+  }
+}

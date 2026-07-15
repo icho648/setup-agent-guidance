@@ -8,7 +8,7 @@ from pathlib import Path
 
 LOCALES = ("en", "zh-CN")
 SINGLE_LOCALE_RESOURCES = {
-    "plugins/setup-agent-guidance/skills/setup-agent-guidance/"
+    "plugins/icho648-plugin/skills/setup-agent-guidance/"
     "references/triggers.zh-CN.md"
 }
 REFERENCE_RE = re.compile(

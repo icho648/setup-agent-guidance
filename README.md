@@ -6,63 +6,59 @@
 
 [简体中文](README.zh-CN.md)
 
-A searchable Claude Code and Codex **plugin marketplace** hosting portable Agent Skills by `icho648`. Add this repository as a marketplace, then install any skill as a plugin.
+A searchable Claude Code and Codex **plugin marketplace** hosting portable Agent Skills by `icho648`. Add this repository as a marketplace, then install the plugin to get both skills.
 
 ## Plugins
 
-| Plugin | Skill | What it does |
+| Plugin | Skills | What it does |
 | --- | --- | --- |
-| [setup-agent-guidance](plugins/setup-agent-guidance/) | `setup-agent-guidance` | Initialize or refresh durable project agent guidance: detect `AGENTS.md`/`CLAUDE.md`, install a progressive workflow and `PLANS.md`, then scan the repository to draft project-specific rules and `code_review.md` with explicit user confirmation. |
-| [grounded-explainer](plugins/grounded-explainer/) | `grounded-explainer` | Explain an object's unique core and necessary implementation from a concrete scenario and the existing problem it solves. Triggered only by explicit invocation (`$grounded-explainer` or `/grounded-explainer:grounded-explainer`). |
+| [icho648-plugin](plugins/icho648-plugin/) | `setup-agent-guidance`, `grounded-explainer` | Initialize or refresh durable project agent guidance (detect `AGENTS.md`/`CLAUDE.md`, install a progressive workflow and `PLANS.md`, draft project-specific rules and `code_review.md`), and explain a technical object's unique core from a concrete scenario. The explainer is triggered only by explicit invocation (`$grounded-explainer` or `/grounded-explainer:grounded-explainer`). |
 
 ## Install
 
-### Add the marketplace and install a plugin (Claude Code)
+### Add the marketplace and install the plugin (Claude Code)
 
 ```text
 /plugin marketplace add icho648/skills
-/plugin install setup-agent-guidance@icho648-skills
-/plugin install grounded-explainer@icho648-skills
+/plugin install icho648-plugin@icho648-skills
 ```
 
 Or from the CLI:
 
 ```bash
 claude plugin marketplace add icho648/skills
-claude plugin install setup-agent-guidance@icho648-skills
-claude plugin install grounded-explainer@icho648-skills
+claude plugin install icho648-plugin@icho648-skills
 ```
 
 Restart Claude Code after installing so the new skills are discovered.
 
-### Add the marketplace and install a plugin (Codex)
+### Add the marketplace and install the plugin (Codex)
 
 ```bash
 codex plugin marketplace add icho648/skills
-codex plugin add setup-agent-guidance@icho648-skills
-codex plugin add grounded-explainer@icho648-skills
+codex plugin add icho648-plugin@icho648-skills
 ```
 
 Start a new Codex task after installation so the plugin skills are discovered.
 
 ### Manual installation
 
-Each plugin's skill is a portable Agent Skills package under `plugins/<name>/skills/<name>/`. Clone the repository, then copy or symlink a skill directory to a location your client scans.
+Each skill is a portable Agent Skills package under `plugins/icho648-plugin/skills/<name>/`. Clone the repository, then copy or symlink a skill directory to a location your client scans.
 
 Claude Code, global:
 
 ```bash
 mkdir -p "$HOME/.claude/skills"
-cp -R plugins/setup-agent-guidance/skills/setup-agent-guidance "$HOME/.claude/skills/"
-cp -R plugins/grounded-explainer/skills/grounded-explainer "$HOME/.claude/skills/"
+cp -R plugins/icho648-plugin/skills/setup-agent-guidance "$HOME/.claude/skills/"
+cp -R plugins/icho648-plugin/skills/grounded-explainer "$HOME/.claude/skills/"
 ```
 
 Codex, global:
 
 ```bash
 mkdir -p "$HOME/.agents/skills"
-cp -R plugins/setup-agent-guidance/skills/setup-agent-guidance "$HOME/.agents/skills/"
-cp -R plugins/grounded-explainer/skills/grounded-explainer "$HOME/.agents/skills/"
+cp -R plugins/icho648-plugin/skills/setup-agent-guidance "$HOME/.agents/skills/"
+cp -R plugins/icho648-plugin/skills/grounded-explainer "$HOME/.agents/skills/"
 ```
 
 Then invoke the skill explicitly (`$setup-agent-guidance` or `$grounded-explainer`).
@@ -76,23 +72,21 @@ Then invoke the skill explicitly (`$setup-agent-guidance` or `$grounded-explaine
 ├── .agents/plugins/
 │   └── marketplace.json          # Codex marketplace registry
 ├── plugins/
-│   ├── setup-agent-guidance/
-│   │   ├── .claude-plugin/plugin.json
-│   │   ├── .codex-plugin/plugin.json
-│   │   ├── skills/setup-agent-guidance/   # Agent Skills package
-│   │   │   ├── SKILL.md
-│   │   │   ├── agents/openai.yaml          # optional Codex UI metadata
-│   │   │   ├── assets/                     # localized templates
-│   │   │   └── references/                 # localized onboarding procedure
-│   │   ├── README.md
-│   │   └── README.zh-CN.md
-│   └── grounded-explainer/
+│   └── icho648-plugin/
 │       ├── .claude-plugin/plugin.json
 │       ├── .codex-plugin/plugin.json
-│       └── skills/grounded-explainer/
-│           ├── SKILL.md
-│           ├── references/explanation-workflow.md
-│           └── agents/openai.yaml
+│       ├── skills/
+│       │   ├── setup-agent-guidance/       # Agent Skills package
+│       │   │   ├── SKILL.md
+│       │   │   ├── agents/openai.yaml      # optional Codex UI metadata
+│       │   │   ├── assets/                 # localized templates
+│       │   │   └── references/             # localized onboarding procedure
+│       │   └── grounded-explainer/         # Agent Skills package
+│       │       ├── SKILL.md
+│       │       ├── references/explanation-workflow.md
+│       │       └── agents/openai.yaml
+│       ├── README.md
+│       └── README.zh-CN.md
 ├── .github/                      # workflows and repository validator
 ├── tests/                        # validator regression tests
 ├── AGENTS.md                     # maintenance instructions for coding agents
@@ -102,7 +96,7 @@ Then invoke the skill explicitly (`$setup-agent-guidance` or `$grounded-explaine
 └── LICENSE
 ```
 
-The repository root is the **marketplace**. Each `plugins/<name>/` directory is one Claude Code and Codex plugin and contains exactly one Agent Skills package under `skills/<name>/`.
+The repository root is the **marketplace**. Each `plugins/<name>/` directory is one Claude Code and Codex plugin and contains one or more Agent Skills packages under `skills/<name>/`.
 
 ## Three compatible standards
 
@@ -126,8 +120,8 @@ Each skill keeps one identity and one canonical workflow in its `SKILL.md`. Loca
 Using the reference validator from the Agent Skills project:
 
 ```bash
-python -m skills_ref.cli validate plugins/setup-agent-guidance/skills/setup-agent-guidance
-python -m skills_ref.cli validate plugins/grounded-explainer/skills/grounded-explainer
+python -m skills_ref.cli validate plugins/icho648-plugin/skills/setup-agent-guidance
+python -m skills_ref.cli validate plugins/icho648-plugin/skills/grounded-explainer
 ```
 
 This repository also ships a GitHub Actions workflow at `.github/workflows/validate.yml` that validates every skill, both marketplace formats, Codex plugin manifests, localized resource pairs, and relative references on every push and pull request.

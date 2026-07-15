@@ -5,22 +5,10 @@
   },
   "plugins": [
     {
-      "name": "setup-agent-guidance",
+      "name": "icho648-plugin",
       "source": {
         "source": "local",
-        "path": "./plugins/setup-agent-guidance"
-      },
-      "policy": {
-        "installation": "AVAILABLE",
-        "authentication": "ON_INSTALL"
-      },
-      "category": "Productivity"
-    },
-    {
-      "name": "grounded-explainer",
-      "source": {
-        "source": "local",
-        "path": "./plugins/grounded-explainer"
+        "path": "./plugins/icho648-plugin"
       },
       "policy": {
         "installation": "AVAILABLE",

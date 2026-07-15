@@ -75,7 +75,7 @@ class ValidateRepositoryTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory) / "repository"
             shutil.copytree(REPOSITORY, root, ignore=shutil.ignore_patterns(".git"))
-            manifest_path = root / "plugins/setup-agent-guidance/.codex-plugin/plugin.json"
+            manifest_path = root / "plugins/icho648-plugin/.codex-plugin/plugin.json"
             manifest = json.loads(manifest_path.read_text())
             manifest["unsupported"] = True
             manifest_path.write_text(json.dumps(manifest))
@@ -84,7 +84,7 @@ class ValidateRepositoryTest(unittest.TestCase):
                 [
                     sys.executable,
                     PLUGIN_VALIDATOR,
-                    root / "plugins/setup-agent-guidance",
+                    root / "plugins/icho648-plugin",
                 ],
                 capture_output=True,
                 text=True,
@@ -98,7 +98,7 @@ class ValidateRepositoryTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory) / "repository"
             shutil.copytree(REPOSITORY, root, ignore=shutil.ignore_patterns(".git"))
-            manifest_path = root / "plugins/setup-agent-guidance/.codex-plugin/plugin.json"
+            manifest_path = root / "plugins/icho648-plugin/.codex-plugin/plugin.json"
             manifest = json.loads(manifest_path.read_text())
             manifest["version"] = "next"
             manifest_path.write_text(json.dumps(manifest))
@@ -107,7 +107,7 @@ class ValidateRepositoryTest(unittest.TestCase):
                 [
                     sys.executable,
                     PLUGIN_VALIDATOR,
-                    root / "plugins/setup-agent-guidance",
+                    root / "plugins/icho648-plugin",
                 ],
                 capture_output=True,
                 text=True,
