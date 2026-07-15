@@ -1,0 +1,10 @@
+{
+  "name": "icho648-plugin",
+  "version": "1.0.0",
+  "description": "Durable project agent guidance setup and grounded explanation: initialize AGENTS.md/CLAUDE.md guidance, or explain a technical object's unique core from a concrete scenario.",
+  "author": {
+    "name": "icho648"
+  },
+  "homepage": "https://github.com/icho648/skills/tree/main/plugins/icho648-plugin",
+  "license": "MIT"
+}

@@ -1,0 +1,34 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "icho648-skills",
+  "description": "Searchable collection of Agent Skills by icho648: durable project agent guidance setup and grounded explanation.",
+  "owner": {
+    "name": "icho648"
+  },
+  "plugins": [
+    {
+      "name": "icho648-plugin",
+      "description": "Durable project agent guidance setup and grounded explanation: initialize AGENTS.md/CLAUDE.md guidance, or explain a technical object's unique core from a concrete scenario.",
+      "source": "./plugins/icho648-plugin",
+      "category": "productivity",
+      "homepage": "https://github.com/icho648/skills/tree/main/plugins/icho648-plugin",
+      "author": {
+        "name": "icho648"
+      },
+      "keywords": [
+        "agents",
+        "agentsmd",
+        "claudemd",
+        "guidance",
+        "onboarding",
+        "code-review",
+        "execplan",
+        "explanation",
+        "learning",
+        "mental-model",
+        "concept",
+        "implementation"
+      ]
+    }
+  ]
+}

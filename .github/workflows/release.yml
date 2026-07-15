@@ -1,4 +1,4 @@
-name: release skill package
+name: release skill packages
 
 on:
   workflow_dispatch:
@@ -13,11 +13,11 @@ on:
       - "v*"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   package:
-    name: Build skill artifact
+    name: Build skill artifacts
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -31,43 +31,65 @@ jobs:
       - name: Install skills-ref
         run: pip install --quiet skills-ref
 
-      - name: Validate skill directory
-        run: python -m skills_ref.cli validate "$(pwd)"
+      - name: Validate every skill package
+        run: |
+          set -e
+          shopt -s nullglob
+          skills=(plugins/*/skills/*/)
+          if [ "${#skills[@]}" -eq 0 ]; then
+            echo "No skill packages found under plugins/*/skills/*/" >&2
+            exit 1
+          fi
+          for skill in "${skills[@]}"; do
+            python -m skills_ref.cli validate "$(pwd)/${skill%/}"
+          done
 
-      - name: Compute archive name
+      - name: Compute archive suffix
         id: name
+        env:
+          INPUT_TAG_SUFFIX: ${{ inputs.tag_suffix }}
         run: |
           if [ "${{ github.event_name }}" = "push" ]; then
-            echo "suffix=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+            suffix="${GITHUB_REF_NAME}"
           else
-            echo "suffix=${{ inputs.tag_suffix }}" >> "$GITHUB_OUTPUT"
+            suffix="${INPUT_TAG_SUFFIX}"
           fi
+          if [[ ! "${suffix}" =~ ^[A-Za-z0-9._-]+$ ]]; then
+            echo "Invalid archive suffix: use letters, digits, dot, underscore, or hyphen" >&2
+            exit 1
+          fi
+          printf 'suffix=%s\n' "${suffix}" >> "$GITHUB_OUTPUT"
 
-      - name: Build .skill archive
+      - name: Build .skill archive per skill
         run: |
           set -euo pipefail
-          name="setup-agent-guidance-${{ steps.name.outputs.suffix }}"
-          zip -r "${name}.skill" . \
-            -x ".git/*" \
-            -x ".github/*" \
-            -x ".venv/*" \
-            -x "*.skill" \
-            -x "*.swp" \
-            -x ".DS_Store" \
-            -x ".*"
-          echo "Built ${name}.skill"
-          ls -la "${name}.skill"
+          shopt -s nullglob
+          mkdir -p dist
+          skills=(plugins/*/skills/*/)
+          for skill in "${skills[@]}"; do
+            name="$(basename "${skill%/}")"
+            archive="${GITHUB_WORKSPACE}/dist/${name}-${{ steps.name.outputs.suffix }}.skill"
+            plugin_dir="$(cd "${skill%/}/../.." && pwd)"
+            stage="$(mktemp -d)"
+            cp -R "${skill%/}/." "${stage}/"
+            [ -f "${plugin_dir}/LICENSE" ] && cp "${plugin_dir}/LICENSE" "${stage}/LICENSE"
+            ( cd "${stage}" && zip -r "${archive}" . \
+                -x "*.swp" -x ".DS_Store" -x ".*" )
+            rm -rf "${stage}"
+            echo "Built ${archive}"
+          done
+          ls -la dist/
 
-      - name: Upload workflow artifact
+      - name: Upload workflow artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: setup-agent-guidance-${{ steps.name.outputs.suffix }}
-          path: setup-agent-guidance-*.skill
+          name: skills-${{ steps.name.outputs.suffix }}
+          path: dist/*.skill
           if-no-files-found: error
 
       - name: Attach to GitHub Release
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: setup-agent-guidance-*.skill
+          files: dist/*.skill
           generate_release_notes: true

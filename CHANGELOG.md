@@ -8,12 +8,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Claude Code plugin marketplace: `.claude-plugin/marketplace.json` registers the `icho648-plugin` plugin (skills: `setup-agent-guidance`, `grounded-explainer`), with a `.claude-plugin/plugin.json` manifest, so the repository is searchable and installable via `/plugin marketplace add icho648/skills`.
+- `grounded-explainer` skill: explains an object's unique core and necessary implementation from a concrete scenario and the existing problem it solves; triggered only by explicit invocation (`$grounded-explainer` in Codex or `/icho648-plugin:grounded-explainer` in Claude Code).
+- Per-plugin `LICENSE` so each installed plugin carries its MIT notice independently of the repository root.
+- Codex plugin manifests and a repo-local `.agents/plugins/marketplace.json` that expose the same skills through `codex plugin`.
 - Version-stamped Core block markers (`agent-guidance:core:version=<X.Y.Z>`) so the skill can detect in-place upgrades without comparing full block content.
 - `.github/workflows/release.yml` that builds and uploads a `.skill` archive on `workflow_dispatch` or `v*` tag push.
 - `.gitignore` entries for `*.skill`, `.skill-inline.md`, and `.venv/` to keep build artifacts out of the working tree.
 
 ### Changed
-- `validate.yml` now uses `pyyaml` to parse the `SKILL.md` frontmatter instead of a hand-rolled regex, so `description` folding and indentation are validated by the YAML spec.
+- Merged the `setup-agent-guidance` and `grounded-explainer` plugins into a single `icho648-plugin` that ships both skills; the Claude Code invocation for the explainer is now `/icho648-plugin:grounded-explainer`.
+- Repository restructured from a single root skill package into a marketplace: the `setup-agent-guidance` skill now lives under `plugins/setup-agent-guidance/skills/setup-agent-guidance/`, with its READMEs moved alongside.
+- `validate.yml` now validates every skill package under `plugins/*/skills/*/` and checks the marketplace and plugin manifests, instead of validating the repository root as one skill.
+- `release.yml` now builds one `.skill` archive per skill from its own directory.
+- Root `README.md` and `README.zh-CN.md` rewritten as marketplace documentation; `AGENTS.md` updated to describe the marketplace maintenance model.
+- `validate.yml` now checks each `SKILL.md` relative reference and validates both Claude Code and Codex marketplace metadata.
 - `SKILL.md` Phase two step 4 explicitly requires stripping every placeholder and generation note from generated `code_review.md` and project blocks.
 - `assets/AGENTS.{en,zh-CN}.template.md` G4 entry now lists Spec Kit alongside OpenSpec so the English and Simplified Chinese blocks stay in lockstep.
 

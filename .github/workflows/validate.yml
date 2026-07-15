@@ -1,4 +1,4 @@
-name: validate skill
+name: validate skills
 
 on:
   push:
@@ -26,31 +26,108 @@ jobs:
       - name: Install skills-ref
         run: pip install --quiet skills-ref pyyaml
 
-      - name: Validate skill directory
-        run: python -m skills_ref.cli validate "$(pwd)"
+      - name: Download pinned plugin-creator validator
+        env:
+          VALIDATOR_SHA256: ebda00d55d7518b127f675f062fb5c6e7a1ffdc0a99df1a55ac594400d7d3228
+          VALIDATOR_URL: https://raw.githubusercontent.com/openai/codex/2e1607ee2fa8099a233df7437adee5f16a741905/codex-rs/skills/src/assets/samples/plugin-creator/scripts/validate_plugin.py
+        run: |
+          curl --fail --location --silent --show-error "$VALIDATOR_URL" \
+            --output "$RUNNER_TEMP/validate_plugin.py"
+          printf '%s  %s\n' "$VALIDATOR_SHA256" "$RUNNER_TEMP/validate_plugin.py" \
+            | sha256sum --check
 
-      - name: Confirm required files exist
+      - name: Validate every skill package
         run: |
           set -e
-          test -f SKILL.md
-          test -d references
-          test -d assets
-          test -d agents
-          echo "Layout OK"
+          shopt -s nullglob
+          skills=(plugins/*/skills/*/)
+          if [ "${#skills[@]}" -eq 0 ]; then
+            echo "No skill packages found under plugins/*/skills/*/" >&2
+            exit 1
+          fi
+          for skill in "${skills[@]}"; do
+            echo "::group::Validating ${skill}"
+            python -m skills_ref.cli validate "$(pwd)/${skill%/}"
+            echo "::endgroup::"
+          done
 
-      - name: Confirm description length
+      - name: Test repository validator
+        env:
+          PLUGIN_VALIDATOR: ${{ runner.temp }}/validate_plugin.py
+        run: python -m unittest tests/test_validate_repository.py
+
+      - name: Validate marketplace registrations
         run: |
           python - <<'PY'
+          import json
           import pathlib
-          import yaml
 
-          text = pathlib.Path("SKILL.md").read_text()
-          assert text.startswith("---\n"), "missing frontmatter"
-          end = text.find("\n---", 4)
-          assert end != -1, "unterminated frontmatter"
-          front = yaml.safe_load(text[4:end])
-          desc = (front or {}).get("description")
-          assert isinstance(desc, str) and desc.strip(), "missing description"
-          assert len(desc) <= 1024, f"description too long: {len(desc)}"
-          print(f"description length: {len(desc)} / 1024")
+          root = pathlib.Path(".")
+          marketplace = root / ".claude-plugin" / "marketplace.json"
+          assert marketplace.is_file(), "missing .claude-plugin/marketplace.json"
+          data = json.loads(marketplace.read_text())
+          codex_marketplace = root / ".agents" / "plugins" / "marketplace.json"
+          assert codex_marketplace.is_file(), "missing .agents/plugins/marketplace.json"
+          codex_data = json.loads(codex_marketplace.read_text())
+          codex_plugins = {p["name"]: p for p in codex_data.get("plugins", [])}
+
+          assert "name" in data and data["name"], "marketplace.json missing name"
+          assert "plugins" in data and isinstance(data["plugins"], list) and data["plugins"], \
+              "marketplace.json must list at least one plugin"
+
+          for plug in data["plugins"]:
+              assert "name" in plug and plug["name"], "plugin entry missing name"
+              assert "description" in plug and plug["description"], \
+                  f"plugin {plug.get('name')} missing description"
+              source = plug.get("source")
+              assert isinstance(source, str) and source.startswith("./"), \
+                  f"plugin {plug['name']} source must be a local './...' path"
+              plug_dir = (root / source).resolve()
+              assert plug_dir.is_dir(), f"plugin {plug['name']} source {source} does not exist"
+              manifest = plug_dir / ".claude-plugin" / "plugin.json"
+              assert manifest.is_file(), f"plugin {plug['name']} missing .claude-plugin/plugin.json"
+              mdata = json.loads(manifest.read_text())
+              assert mdata.get("name") == plug["name"], \
+                  f"plugin {plug['name']} plugin.json name mismatch: {mdata.get('name')}"
+              assert mdata.get("description") == plug["description"], \
+                  f"plugin {plug['name']} Claude description mismatch"
+              codex_entry = codex_plugins.get(plug["name"])
+              assert codex_entry, f"plugin {plug['name']} missing from Codex marketplace"
+              assert codex_entry.get("source") == {"source": "local", "path": source}, \
+                  f"plugin {plug['name']} Codex source mismatch"
+              codex_manifest = plug_dir / ".codex-plugin" / "plugin.json"
+              assert codex_manifest.is_file(), \
+                  f"plugin {plug['name']} missing .codex-plugin/plugin.json"
+              cdata = json.loads(codex_manifest.read_text())
+              assert cdata.get("name") == plug["name"], \
+                  f"plugin {plug['name']} Codex manifest name mismatch"
+              assert cdata.get("description") == plug["description"], \
+                  f"plugin {plug['name']} Codex description mismatch"
+              assert cdata.get("skills") == "./skills/", \
+                  f"plugin {plug['name']} Codex skills path must be ./skills/"
+              skills_dir = plug_dir / "skills"
+              assert skills_dir.is_dir(), \
+                  f"plugin {plug['name']} missing skills/"
+              skill_roots = [p for p in skills_dir.iterdir() if p.is_dir()]
+              assert skill_roots, \
+                  f"plugin {plug['name']} has no skill packages under skills/"
+              for skill_root in skill_roots:
+                  assert (skill_root / "SKILL.md").is_file(), \
+                      f"plugin {plug['name']} missing SKILL.md in {skill_root.name}/"
+              print(f"OK: {plug['name']} -> {source}")
+
+          names = [p["name"] for p in data["plugins"]]
+          assert len(names) == len(set(names)), f"duplicate plugin names: {names}"
+          assert set(names) == set(codex_plugins), \
+              f"Claude/Codex marketplace plugin mismatch: {names} vs {list(codex_plugins)}"
+          print(f"marketplace {data['name']} lists {len(names)} plugin(s): {names}")
           PY
+
+      - name: Validate every Codex plugin
+        run: |
+          for plugin in plugins/*/; do
+            python "$RUNNER_TEMP/validate_plugin.py" "${plugin%/}"
+          done
+
+      - name: Validate paths and localized resources
+        run: python .github/scripts/validate_repository.py

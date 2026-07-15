@@ -1,145 +1,140 @@
-# setup-agent-guidance
+# icho648-skills
+
+[![validate skills](https://github.com/icho648/skills/actions/workflows/validate.yml/badge.svg)](./.github/workflows/validate.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![Agent Skills](https://img.shields.io/badge/Agent%20Skills-1.0-blue)](https://agentskills.io/specification)
 
 [English](README.md)
 
-这是一个可安装的 Agent Skill，用来为代码项目初始化长期有效的 Agent 指南，同时避免把每个任务都强制塞进重量级规格流程。
+一个可搜索的 Claude Code 与 Codex **插件市场**，托管 `icho648` 的便携 Agent Skills。把本仓库添加为市场后，安装插件即可获得两个技能。
 
-它会把渐进式“工作流变速箱”安装到项目已有的 Agent 指令中；缺少 `PLANS.md` 时补充 ExecPlan 规范；还可以只读通览仓库，在用户明确确认后生成项目专属指南和 `code_review.md`。
+## 插件
 
-## 它会做什么
+| 插件 | 技能 | 作用 |
+| --- | --- | --- |
+| [icho648-plugin](plugins/icho648-plugin/) | `setup-agent-guidance`、`grounded-explainer` | 初始化或刷新持久的项目代理指导（检测 `AGENTS.md`/`CLAUDE.md`，安装渐进式工作流和 `PLANS.md`，生成项目专属规则与 `code_review.md`），以及从具体场景解释对象的独特核心。解释器仅在显式调用时触发（`$grounded-explainer` 或 `/icho648-plugin:grounded-explainer`）。 |
 
-- 检测并更新已有的 `AGENTS.md`、`CLAUDE.md` 或 `.claude/CLAUDE.md`；只有都不存在时才创建根目录 `AGENTS.md`。
-- 安装四档渐进工作流：直接执行、先规划、ExecPlan、沿用项目已有规格治理。
-- 完整保留已有 `PLANS.md`；不存在时才按语言安装英文或简体中文模板。
-- 先只读扫描仓库，再提出项目命令、工程约定和 Review 门禁。
-- 未经确认，不覆盖用户拥有的项目指南或 `code_review.md`。
-- 只有指令和模板，不依赖 Python、Shell 脚本、第三方包或额外运行时。
+## 安装
+
+### 添加市场并安装插件（Claude Code）
+
+```text
+/plugin marketplace add icho648/skills
+/plugin install icho648-plugin@icho648-skills
+```
+
+或通过 CLI：
+
+```bash
+claude plugin marketplace add icho648/skills
+claude plugin install icho648-plugin@icho648-skills
+```
+
+安装后重启 Claude Code，以便发现新技能。
+
+### 添加市场并安装插件（Codex）
+
+```bash
+codex plugin marketplace add icho648/skills
+codex plugin add icho648-plugin@icho648-skills
+```
+
+安装后新建一个 Codex 任务，使其发现插件中的技能。
+
+### 手动安装
+
+每个技能都是 `plugins/icho648-plugin/skills/<名>/` 下的便携 Agent Skills 包。克隆仓库后，把技能目录复制或软链到客户端扫描的位置。
+
+Claude Code 全局：
+
+```bash
+mkdir -p "$HOME/.claude/skills"
+cp -R plugins/icho648-plugin/skills/setup-agent-guidance "$HOME/.claude/skills/"
+cp -R plugins/icho648-plugin/skills/grounded-explainer "$HOME/.claude/skills/"
+```
+
+Codex 全局：
+
+```bash
+mkdir -p "$HOME/.agents/skills"
+cp -R plugins/icho648-plugin/skills/setup-agent-guidance "$HOME/.agents/skills/"
+cp -R plugins/icho648-plugin/skills/grounded-explainer "$HOME/.agents/skills/"
+```
+
+随后显式调用技能（Claude Code：`/setup-agent-guidance` 或 `/grounded-explainer`；Codex：`$setup-agent-guidance` 或 `$grounded-explainer`）。
 
 ## 仓库结构
 
 ```text
 .
-├── SKILL.md                   # Agent Skills 必需入口
-├── agents/
-│   └── openai.yaml            # 可选 Codex 展示元数据
-├── assets/                    # 多语言模板
-├── references/                # 多语言建档流程
-├── .github/workflows/         # validate.yml 与 release.yml
-├── AGENTS.md                  # 供维护本仓库的编程 Agent 使用
-├── CLAUDE.md                  # 导入同一份维护指令
+├── .claude-plugin/
+│   └── marketplace.json          # Claude Code 市场清单
+├── .agents/plugins/
+│   └── marketplace.json          # Codex 市场清单
+├── plugins/
+│   └── icho648-plugin/
+│       ├── .claude-plugin/plugin.json
+│       ├── .codex-plugin/plugin.json
+│       ├── skills/
+│       │   ├── setup-agent-guidance/       # Agent Skills 包
+│       │   │   ├── SKILL.md
+│       │   │   ├── agents/openai.yaml      # 可选 Codex UI 元数据
+│       │   │   ├── assets/                 # 本地化模板
+│       │   │   └── references/             # 本地化上手流程
+│       │   └── grounded-explainer/         # Agent Skills 包
+│       │       ├── SKILL.md
+│       │       ├── references/explanation-workflow.md
+│       │       └── agents/openai.yaml
+│       ├── README.md
+│       └── README.zh-CN.md
+├── .github/                      # 工作流与仓库校验器
+├── tests/                        # 校验器回归测试
+├── AGENTS.md                     # 仓库维护说明
+├── CLAUDE.md                     # 引用同一份维护说明
 ├── README.md
 ├── README.zh-CN.md
 └── LICENSE
 ```
 
-仓库根目录就是可安装的 Skill 包。仓库根目录的维护文件会随 Skill 一起分发；目标项目模板放在 `assets/` 下。
+仓库根是**市场**。每个 `plugins/<名>/` 目录同时是 Claude Code 与 Codex 插件，内含一个或多个 Agent Skills 包（位于 `skills/<名>/`）。
 
-## 安装
+## 三套兼容标准
 
-### 在 Codex 中从 GitHub 安装
+- **Claude Code 插件市场。** `.claude-plugin/marketplace.json` 注册市场，并用本地 `source` 路径列出每个插件；每个插件有 `.claude-plugin/plugin.json` 清单。这让技能可通过 `/plugin` 被搜索和安装。
+- **Codex 插件市场。** `.agents/plugins/marketplace.json` 为 Codex 注册相同的插件根目录；每个插件用 `.codex-plugin/plugin.json` 指向已有的 `skills/` 目录。
+- **Agent Skills 规范。** 每个 `skills/<名>/` 目录是独立、跨客户端的 Agent Skills 包（`SKILL.md` + 可选 `assets/`、`references/`、`agents/`），用 `skills-ref` 校验。Codex 等 Agent Skills 客户端可绕过插件外壳直接使用。
 
-在 Codex 中输入以下提示：
-
-```text
-使用 $skill-installer 安装
-https://github.com/icho648/setup-agent-guidance
-```
-
-安装后重启 Codex，使其发现新 Skill。
-
-### 手动安装
-
-克隆仓库，然后把仓库目录复制或软链接到客户端支持的 Agent Skills 路径。
-
-Codex，全局：
-
-```bash
-mkdir -p "$HOME/.agents/skills"
-cp -R /path/to/setup-agent-guidance "$HOME/.agents/skills/"
-```
-
-Codex，当前项目：
-
-```bash
-mkdir -p .agents/skills
-cp -R /path/to/setup-agent-guidance .agents/skills/
-```
-
-Claude Code，全局：
-
-```bash
-mkdir -p "$HOME/.claude/skills"
-cp -R /path/to/setup-agent-guidance "$HOME/.claude/skills/"
-```
-
-Claude Code，当前项目：
-
-```bash
-mkdir -p .claude/skills
-cp -R /path/to/setup-agent-guidance .claude/skills/
-```
-
-之后可以显式调用 `setup-agent-guidance`，也可以直接要求 Agent 初始化项目 Agent 指南。
-
-发布 `.skill` 归档时，请在 Actions 页面手动触发 `.github/workflows/release.yml`（workflow_dispatch），或推送 `v*` tag；不要把预打包产物提交到仓库。
-
-## 通用 Agent Skills 格式
-
-本项目遵循 [Agent Skills 规范](https://agentskills.io/specification)：
-
-- 每个 Skill 是一个独立目录，目录名必须与 `name` 相同。
-- 必须包含 `SKILL.md`，并以 YAML frontmatter 开头，至少包含 `name` 和 `description`。
-- 名称只使用小写字母、数字和连字符，最长 64 个字符。
-- `description` 同时说明“做什么”和“何时触发”，最长 1024 个字符。
-- `scripts/`、`references/`、`assets/` 都是可选目录；本项目刻意只使用 references 和 assets。
-- 资源使用相对 Skill 根目录的路径，并按需渐进加载。
-
-`agents/openai.yaml` 只是可选的 Codex 展示元数据，其他 Agent Skills 客户端可以忽略。这里没有包装成 Codex Plugin，因为当前工作流不需要 MCP、Hook、App 等插件专属能力。
+`agents/openai.yaml` 是可选的 Codex 呈现元数据，其他 Agent Skills 客户端可忽略。
 
 ## 中英文维护策略
 
-仓库只维护一个 Skill ID，并在 `SKILL.md` 中维护一份行为逻辑。面向用户的多语言资源使用文件名后缀：
+每个技能保持单一身份和单一规范工作流（在其 `SKILL.md` 中）。本地化用户资源用文件名后缀区分：
 
-- 英文：`*.en.md`、`*.en.template.md`
-- 简体中文：`*.zh-CN.md`、`*.zh-CN.template.md`
+- 英文：`*.en.md` 与 `*.en.template.md`
+- 简体中文：`*.zh-CN.md` 与 `*.zh-CN.template.md`
 
-运行时根据现有项目指令语言、用户明确指定的语言或当前请求语言选择 locale，并且只读取该语言资源。这样不会产生两份重复的触发描述，也不会把未使用的翻译装入上下文。
-
-修改行为时：
-
-1. `SKILL.md` 只修改一次。
-2. 在同一个提交中同步更新所有受影响的中英文资源对。
-3. 两个版本的标题结构、managed markers、占位符和要求保持一致。
-4. 中英文语义等价即可，不要求逐行硬译。
-5. 提交前运行校验，并人工审查双语 diff。
-
-这种“一份行为逻辑 + 本地化资源”的方式优于发布两个独立 Skill：两个相似 Skill 会竞争同一类请求，而且更容易随时间发生功能漂移。
+`setup-agent-guidance` 提供本地化的 asset/reference 配对；`grounded-explainer` 以简体中文撰写。改动行为时，同一改动内更新每一对受影响的本地化资源，并保持标题、受管标记、占位符与要求在语义上同步。
 
 ## 校验
 
 使用 Agent Skills 项目的参考校验器：
 
 ```bash
-python -m skills_ref.cli validate .
+python -m skills_ref.cli validate plugins/icho648-plugin/skills/setup-agent-guidance
+python -m skills_ref.cli validate plugins/icho648-plugin/skills/grounded-explainer
 ```
 
-如果 Codex 开发环境自带 `skill-creator`，也可以使用其中的 `quick_validate.py` 校验目录。
+本仓库还附带 `.github/workflows/validate.yml`，在每次 push 和 pull request 时校验所有技能、两种市场格式、Codex 插件清单、本地化资源配对与相对路径引用。
 
-仓库自带的 `.github/workflows/validate.yml` 会在每次 push 与 PR 时运行同样的检查，破坏 Skill 的改动会被 CI 自动拦截。
+另一份 `.github/workflows/release.yml` 在 `workflow_dispatch` 或每次 `v*` 标签推送时为每个技能构建 `.skill` 归档，并附到对应的 GitHub Release。手动运行用于不打标签产出预发布制品；标签流程用于永久版本发布。
 
-另外还有 `.github/workflows/release.yml`：在手动触发（workflow_dispatch）或推送 `v*` tag 时把 Skill 打包成 `.skill` 归档，并把它作为附件挂到对应的 GitHub Release。手动触发用于不打 tag 就拿到预发布产物；tag 触发用于发布正式版本。
+## 参考
 
-发布前至少在全新会话中测试一个英文提示和一个中文提示。触发是否正确、执行结果是否正确要分别验证。
-
-## 参考来源
-
+- [Claude Code 插件与市场](https://docs.claude.com/en/docs/claude-code/plugins)
 - [Agent Skills 规范](https://agentskills.io/specification)
-- [Codex 自定义与 Skills](https://developers.openai.com/codex/concepts/customization#skills)
-- [OpenAI Codex ExecPlans 文章](https://developers.openai.com/cookbook/articles/codex_exec_plans)
-- [Claude Code Skills](https://code.claude.com/docs/en/skills)
+- [Codex 定制与技能](https://developers.openai.com/codex/concepts/customization#skills)
+- [Claude Code 技能](https://code.claude.com/docs/en/skills)
 
-ExecPlan 模板改编自 OpenAI Cookbook 文章，并按照 `LICENSE` 中的 MIT 条款保留。
+## 许可
 
-## 许可证
-
-MIT，详见 [LICENSE](LICENSE)。
+MIT。见 [LICENSE](LICENSE)。
