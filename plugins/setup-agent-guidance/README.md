@@ -24,6 +24,7 @@ It installs a small workflow “gearbox” into the project's existing agent ins
 ```text
 plugins/setup-agent-guidance/
 ├── .claude-plugin/plugin.json   # Claude Code plugin manifest
+├── .codex-plugin/plugin.json    # Codex plugin manifest
 ├── skills/setup-agent-guidance/ # the Agent Skills package
 │   ├── SKILL.md                 # required Agent Skills entry point
 │   ├── agents/openai.yaml       # optional Codex UI metadata
@@ -33,7 +34,7 @@ plugins/setup-agent-guidance/
 └── README.zh-CN.md
 ```
 
-This plugin ships one Agent Skills package under `skills/setup-agent-guidance/`. The marketplace manifest that makes it installable lives at the repository root in `.claude-plugin/marketplace.json`; see the root [README](../../README.md). Target-project templates live under the skill's `assets/`.
+This plugin ships one Agent Skills package under `skills/setup-agent-guidance/`. The repository-root Claude Code and Codex marketplace manifests both point at this plugin; see the root [README](../../README.md). Target-project templates live under the skill's `assets/`.
 
 ## Install
 
@@ -46,16 +47,14 @@ This plugin ships one Agent Skills package under `skills/setup-agent-guidance/`.
 
 Restart Claude Code after installation so the new skill is discovered.
 
-### Install from GitHub in Codex
+### Install via the marketplace (Codex)
 
-Enter the following prompt in Codex:
-
-```text
-Use $skill-installer to install
-https://github.com/icho648/skills/tree/main/plugins/setup-agent-guidance/skills/setup-agent-guidance
+```bash
+codex plugin marketplace add icho648/skills
+codex plugin add setup-agent-guidance@icho648-skills
 ```
 
-Restart Codex after installation so the new skill is discovered.
+Start a new Codex task after installation so the plugin skill is discovered.
 
 ### Manual installation
 
@@ -90,7 +89,7 @@ The package follows the [Agent Skills specification](https://agentskills.io/spec
 - `scripts/`, `references/`, and `assets/` are optional; this project intentionally uses only references and assets.
 - Resource links are relative to the skill root and loaded progressively.
 
-`agents/openai.yaml` is optional Codex presentation metadata. Other Agent Skills clients can ignore it. The repository is deliberately not packaged as a Codex plugin because the workflow needs no MCP server, hook, app, or other plugin-only capability.
+`agents/openai.yaml` is optional Codex presentation metadata. `.codex-plugin/plugin.json` packages the same portable skill for Codex without adding an MCP server, hook, app, or runtime.
 
 ## English and Chinese maintenance policy
 

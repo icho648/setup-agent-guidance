@@ -1,7 +1,7 @@
 {
   "name": "grounded-explainer",
   "version": "1.0.0",
-  "description": "Explain an object's unique core and necessary implementation starting from a concrete scenario and the existing problem it solves. Triggered only by explicit $grounded-explainer invocation.",
+  "description": "Explain an object's unique core and necessary implementation starting from a concrete scenario and the existing problem it solves. Triggered only by explicit invocation: $grounded-explainer in Codex or /grounded-explainer:grounded-explainer in Claude Code.",
   "author": {
     "name": "icho648",
     "url": "https://github.com/icho648"

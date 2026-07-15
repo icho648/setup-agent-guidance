@@ -46,12 +46,19 @@ jobs:
 
       - name: Compute archive suffix
         id: name
+        env:
+          INPUT_TAG_SUFFIX: ${{ inputs.tag_suffix }}
         run: |
           if [ "${{ github.event_name }}" = "push" ]; then
-            echo "suffix=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+            suffix="${GITHUB_REF_NAME}"
           else
-            echo "suffix=${{ inputs.tag_suffix }}" >> "$GITHUB_OUTPUT"
+            suffix="${INPUT_TAG_SUFFIX}"
           fi
+          if [[ ! "${suffix}" =~ ^[A-Za-z0-9._-]+$ ]]; then
+            echo "Invalid archive suffix: use letters, digits, dot, underscore, or hyphen" >&2
+            exit 1
+          fi
+          printf 'suffix=%s\n' "${suffix}" >> "$GITHUB_OUTPUT"
 
       - name: Build .skill archive per skill
         run: |

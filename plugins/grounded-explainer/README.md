@@ -36,15 +36,25 @@ Claude Code（经插件市场安装后）：
 /plugin install grounded-explainer@icho648-skills
 ```
 
+Codex 市场：
+
+```bash
+codex plugin marketplace add icho648/skills
+codex plugin add grounded-explainer@icho648-skills
+```
+
 也可手动复制或软链 `skills/grounded-explainer/` 到客户端的技能目录。
 
 ## 结构
 
 ```text
 skills/grounded-explainer/
-├── SKILL.md          # 技能入口（中文）
-└── agents/openai.yaml # 可选 Codex UI 元数据
+├── SKILL.md                         # 精简技能入口（中文）
+├── references/explanation-workflow.md # 详细解释流程
+└── agents/openai.yaml               # 可选 Codex UI 元数据
 ```
+
+插件根同时包含 `.claude-plugin/plugin.json` 与 `.codex-plugin/plugin.json`，复用同一份 Agent Skills 包。
 
 ## 许可
 

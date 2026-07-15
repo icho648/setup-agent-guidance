@@ -1,11 +1,12 @@
 # Repository Agent Guidance
 
-This repository is a Claude Code **plugin marketplace** that hosts one or more skill plugins. The repository root is the marketplace; each `plugins/<name>/` directory is one plugin and contains exactly one Agent Skills package under `skills/<name>/`. Repository-root maintenance files are shipped alongside the marketplace.
+This repository is a Claude Code and Codex **plugin marketplace** that hosts one or more skill plugins. The repository root is the marketplace; each `plugins/<name>/` directory is one plugin and contains exactly one Agent Skills package under `skills/<name>/`. Repository-root maintenance files are shipped alongside the marketplace.
 
 ## Source of truth
 
-- `.claude-plugin/marketplace.json` is the marketplace registry: it lists every plugin and its local `source` path.
-- Each plugin's `.claude-plugin/plugin.json` is that plugin's manifest (name, version, description, author).
+- `.claude-plugin/marketplace.json` is the Claude Code marketplace registry.
+- `.agents/plugins/marketplace.json` is the Codex marketplace registry.
+- Each plugin's `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json` are its client-specific manifests.
 - Each `skills/<name>/SKILL.md` is the single canonical workflow for that skill.
 - Treat English and Simplified Chinese resources as semantically equal pairs within the skill that ships them.
 - Do not create separately discoverable language-specific skills or plugins.
@@ -19,15 +20,15 @@ This repository is a Claude Code **plugin marketplace** that hosts one or more s
 - Keep skills runtime-free unless a future requirement demonstrably cannot be implemented with agent-native file operations.
 - Do not introduce platform-specific frontmatter into a `SKILL.md`; optional client metadata belongs in its client-specific directory (e.g. `agents/openai.yaml`).
 - Preserve the English ExecPlan source and the Chinese translation in semantic lockstep (applies to `setup-agent-guidance`).
-- When adding, renaming, or removing a plugin, update `marketplace.json` and the plugin's `plugin.json` in the same change, and keep the plugin directory name, the `source` path, the `plugin.json` name, and the skill directory name consistent.
-- Keep `marketplace.json` descriptions in sync with each plugin's `plugin.json` description.
+- When adding, renaming, or removing a plugin, update both marketplace registries and both client manifests in the same change, and keep the plugin directory name, source paths, manifest names, and skill directory name consistent.
+- Keep marketplace descriptions in sync with the corresponding client manifests and canonical skill behavior.
 
 ## Verification
 
 Before claiming a change complete:
 
 1. Validate every skill package with an Agent Skills-compatible validator (`skills_ref` against each `plugins/<name>/skills/<name>/`).
-2. Confirm `.claude-plugin/marketplace.json` is valid JSON and every `source` path resolves to a directory containing `.claude-plugin/plugin.json`.
+2. Validate each Codex plugin with the plugin-creator validator and confirm both marketplace registries are valid JSON whose source paths resolve to the matching client manifests.
 3. Check that every localized resource has its counterpart.
 4. Compare paired headings, managed markers, placeholders, and file references.
 5. Verify every relative path referenced by each `SKILL.md` exists within its own skill directory.

@@ -29,7 +29,7 @@
     },
     {
       "name": "grounded-explainer",
-      "description": "Explain an object's unique core and necessary implementation starting from a concrete scenario and the existing problem it solves. Triggered only by explicit $grounded-explainer invocation.",
+      "description": "Explain an object's unique core and necessary implementation starting from a concrete scenario and the existing problem it solves. Triggered only by explicit invocation: $grounded-explainer in Codex or /grounded-explainer:grounded-explainer in Claude Code.",
       "source": "./plugins/grounded-explainer",
       "category": "productivity",
       "homepage": "https://github.com/icho648/skills/tree/main/plugins/grounded-explainer",

@@ -6,7 +6,7 @@
 
 [简体中文](README.zh-CN.md)
 
-A searchable Claude Code **plugin marketplace** hosting portable Agent Skills by `icho648`. Add this repository as a marketplace, then install any skill as a plugin.
+A searchable Claude Code and Codex **plugin marketplace** hosting portable Agent Skills by `icho648`. Add this repository as a marketplace, then install any skill as a plugin.
 
 ## Plugins
 
@@ -30,9 +30,20 @@ Or from the CLI:
 ```bash
 claude plugin marketplace add icho648/skills
 claude plugin install setup-agent-guidance@icho648-skills
+claude plugin install grounded-explainer@icho648-skills
 ```
 
 Restart Claude Code after installing so the new skills are discovered.
+
+### Add the marketplace and install a plugin (Codex)
+
+```bash
+codex plugin marketplace add icho648/skills
+codex plugin add setup-agent-guidance@icho648-skills
+codex plugin add grounded-explainer@icho648-skills
+```
+
+Start a new Codex task after installation so the plugin skills are discovered.
 
 ### Manual installation
 
@@ -62,9 +73,12 @@ Then invoke the skill explicitly (`$setup-agent-guidance` or `$grounded-explaine
 .
 ├── .claude-plugin/
 │   └── marketplace.json          # Claude Code marketplace registry
+├── .agents/plugins/
+│   └── marketplace.json          # Codex marketplace registry
 ├── plugins/
 │   ├── setup-agent-guidance/
 │   │   ├── .claude-plugin/plugin.json
+│   │   ├── .codex-plugin/plugin.json
 │   │   ├── skills/setup-agent-guidance/   # Agent Skills package
 │   │   │   ├── SKILL.md
 │   │   │   ├── agents/openai.yaml          # optional Codex UI metadata
@@ -74,8 +88,10 @@ Then invoke the skill explicitly (`$setup-agent-guidance` or `$grounded-explaine
 │   │   └── README.zh-CN.md
 │   └── grounded-explainer/
 │       ├── .claude-plugin/plugin.json
+│       ├── .codex-plugin/plugin.json
 │       └── skills/grounded-explainer/
 │           ├── SKILL.md
+│           ├── references/explanation-workflow.md
 │           └── agents/openai.yaml
 ├── .github/workflows/            # validate.yml and release.yml
 ├── AGENTS.md                     # maintenance instructions for coding agents
@@ -85,11 +101,12 @@ Then invoke the skill explicitly (`$setup-agent-guidance` or `$grounded-explaine
 └── LICENSE
 ```
 
-The repository root is the **marketplace**. Each `plugins/<name>/` directory is one Claude Code plugin and contains exactly one Agent Skills package under `skills/<name>/`.
+The repository root is the **marketplace**. Each `plugins/<name>/` directory is one Claude Code and Codex plugin and contains exactly one Agent Skills package under `skills/<name>/`.
 
-## Two compatible standards
+## Three compatible standards
 
 - **Claude Code plugin marketplace.** `.claude-plugin/marketplace.json` registers the marketplace and lists each plugin with a local `source` path. Each plugin has a `.claude-plugin/plugin.json` manifest. This is what makes the skills searchable and installable via `/plugin`.
+- **Codex plugin marketplace.** `.agents/plugins/marketplace.json` registers the same plugin roots for Codex, and each plugin has a `.codex-plugin/plugin.json` manifest pointing at its existing `skills/` directory.
 - **Agent Skills specification.** Each `skills/<name>/` directory is a standalone, cross-client Agent Skills package (`SKILL.md` + optional `assets/`, `references/`, `agents/`), validated with `skills-ref`. Codex and other Agent Skills clients can consume it directly without the plugin wrapper.
 
 `agents/openai.yaml` is optional Codex presentation metadata; other Agent Skills clients ignore it.
@@ -112,7 +129,7 @@ python -m skills_ref.cli validate plugins/setup-agent-guidance/skills/setup-agen
 python -m skills_ref.cli validate plugins/grounded-explainer/skills/grounded-explainer
 ```
 
-This repository also ships a GitHub Actions workflow at `.github/workflows/validate.yml` that validates every skill and the marketplace manifest on every push and pull request, so PRs that break a skill or the marketplace will fail CI automatically.
+This repository also ships a GitHub Actions workflow at `.github/workflows/validate.yml` that validates every skill plus both marketplace formats on every push and pull request, so PRs that break a skill or marketplace will fail CI automatically.
 
 A second workflow at `.github/workflows/release.yml` builds a `.skill` archive per skill on `workflow_dispatch` or on every `v*` tag push, and attaches the archives to the matching GitHub Release. Use the manual run to produce a pre-release artifact without tagging; use the tag flow for a permanent versioned release.
 

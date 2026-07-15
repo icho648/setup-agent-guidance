@@ -24,6 +24,7 @@
 ```text
 plugins/setup-agent-guidance/
 ├── .claude-plugin/plugin.json   # Claude Code 插件清单
+├── .codex-plugin/plugin.json    # Codex 插件清单
 ├── skills/setup-agent-guidance/ # Agent Skills 包
 │   ├── SKILL.md                 # Agent Skills 必需入口
 │   ├── agents/openai.yaml       # 可选 Codex 展示元数据
@@ -33,7 +34,7 @@ plugins/setup-agent-guidance/
 └── README.zh-CN.md
 ```
 
-本插件在 `skills/setup-agent-guidance/` 下提供唯一的 Agent Skills 包。让它可安装的市场清单位于仓库根目录的 `.claude-plugin/marketplace.json`，详见仓库根 [README](../../README.zh-CN.md)。目标项目模板放在技能的 `assets/` 下。
+本插件在 `skills/setup-agent-guidance/` 下提供唯一的 Agent Skills 包。仓库根的 Claude Code 与 Codex 市场清单都指向这个插件，详见仓库根 [README](../../README.zh-CN.md)。目标项目模板放在技能的 `assets/` 下。
 
 ## 安装
 
@@ -46,16 +47,14 @@ plugins/setup-agent-guidance/
 
 安装后重启 Claude Code，使其发现新技能。
 
-### 在 Codex 中从 GitHub 安装
+### 通过市场安装（Codex）
 
-在 Codex 中输入以下提示：
-
-```text
-使用 $skill-installer 安装
-https://github.com/icho648/skills/tree/main/plugins/setup-agent-guidance/skills/setup-agent-guidance
+```bash
+codex plugin marketplace add icho648/skills
+codex plugin add setup-agent-guidance@icho648-skills
 ```
 
-安装后重启 Codex，使其发现新 Skill。
+安装后新建一个 Codex 任务，使其发现插件中的技能。
 
 ### 手动安装
 
@@ -90,7 +89,7 @@ cp -R plugins/setup-agent-guidance/skills/setup-agent-guidance "$HOME/.claude/sk
 - `scripts/`、`references/`、`assets/` 都是可选目录；本项目刻意只使用 references 和 assets。
 - 资源使用相对 Skill 根目录的路径，并按需渐进加载。
 
-`agents/openai.yaml` 只是可选的 Codex 展示元数据，其他 Agent Skills 客户端可以忽略。这里没有包装成 Codex Plugin，因为当前工作流不需要 MCP、Hook、App 等插件专属能力。
+`agents/openai.yaml` 只是可选的 Codex 展示元数据。`.codex-plugin/plugin.json` 将同一个便携技能包装给 Codex，不额外引入 MCP、Hook、App 或运行时。
 
 ## 中英文维护策略
 

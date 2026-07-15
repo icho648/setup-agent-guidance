@@ -6,7 +6,7 @@
 
 [English](README.md)
 
-一个可搜索的 Claude Code **插件市场**，托管 `icho648` 的便携 Agent Skills。把本仓库添加为市场后，即可把任意技能作为插件安装。
+一个可搜索的 Claude Code 与 Codex **插件市场**，托管 `icho648` 的便携 Agent Skills。把本仓库添加为市场后，即可把任意技能作为插件安装。
 
 ## 插件
 
@@ -30,9 +30,20 @@
 ```bash
 claude plugin marketplace add icho648/skills
 claude plugin install setup-agent-guidance@icho648-skills
+claude plugin install grounded-explainer@icho648-skills
 ```
 
 安装后重启 Claude Code，以便发现新技能。
+
+### 添加市场并安装插件（Codex）
+
+```bash
+codex plugin marketplace add icho648/skills
+codex plugin add setup-agent-guidance@icho648-skills
+codex plugin add grounded-explainer@icho648-skills
+```
+
+安装后新建一个 Codex 任务，使其发现插件中的技能。
 
 ### 手动安装
 
@@ -62,9 +73,12 @@ cp -R plugins/grounded-explainer/skills/grounded-explainer "$HOME/.agents/skills
 .
 ├── .claude-plugin/
 │   └── marketplace.json          # Claude Code 市场清单
+├── .agents/plugins/
+│   └── marketplace.json          # Codex 市场清单
 ├── plugins/
 │   ├── setup-agent-guidance/
 │   │   ├── .claude-plugin/plugin.json
+│   │   ├── .codex-plugin/plugin.json
 │   │   ├── skills/setup-agent-guidance/   # Agent Skills 包
 │   │   │   ├── SKILL.md
 │   │   │   ├── agents/openai.yaml          # 可选 Codex UI 元数据
@@ -74,8 +88,10 @@ cp -R plugins/grounded-explainer/skills/grounded-explainer "$HOME/.agents/skills
 │   │   └── README.zh-CN.md
 │   └── grounded-explainer/
 │       ├── .claude-plugin/plugin.json
+│       ├── .codex-plugin/plugin.json
 │       └── skills/grounded-explainer/
 │           ├── SKILL.md
+│           ├── references/explanation-workflow.md
 │           └── agents/openai.yaml
 ├── .github/workflows/            # validate.yml 与 release.yml
 ├── AGENTS.md                     # 仓库维护说明
@@ -85,11 +101,12 @@ cp -R plugins/grounded-explainer/skills/grounded-explainer "$HOME/.agents/skills
 └── LICENSE
 ```
 
-仓库根是**市场**。每个 `plugins/<名>/` 目录是一个 Claude Code 插件，内含恰好一个 Agent Skills 包（位于 `skills/<名>/`）。
+仓库根是**市场**。每个 `plugins/<名>/` 目录同时是 Claude Code 与 Codex 插件，内含恰好一个 Agent Skills 包（位于 `skills/<名>/`）。
 
-## 两套兼容标准
+## 三套兼容标准
 
 - **Claude Code 插件市场。** `.claude-plugin/marketplace.json` 注册市场，并用本地 `source` 路径列出每个插件；每个插件有 `.claude-plugin/plugin.json` 清单。这让技能可通过 `/plugin` 被搜索和安装。
+- **Codex 插件市场。** `.agents/plugins/marketplace.json` 为 Codex 注册相同的插件根目录；每个插件用 `.codex-plugin/plugin.json` 指向已有的 `skills/` 目录。
 - **Agent Skills 规范。** 每个 `skills/<名>/` 目录是独立、跨客户端的 Agent Skills 包（`SKILL.md` + 可选 `assets/`、`references/`、`agents/`），用 `skills-ref` 校验。Codex 等 Agent Skills 客户端可绕过插件外壳直接使用。
 
 `agents/openai.yaml` 是可选的 Codex 呈现元数据，其他 Agent Skills 客户端可忽略。
@@ -112,7 +129,7 @@ python -m skills_ref.cli validate plugins/setup-agent-guidance/skills/setup-agen
 python -m skills_ref.cli validate plugins/grounded-explainer/skills/grounded-explainer
 ```
 
-本仓库还附带 `.github/workflows/validate.yml`，在每次 push 和 pull request 时校验所有技能与市场清单，破坏技能或市场的 PR 会自动失败 CI。
+本仓库还附带 `.github/workflows/validate.yml`，在每次 push 和 pull request 时校验所有技能及两种市场格式，破坏技能或市场的 PR 会自动失败 CI。
 
 另一份 `.github/workflows/release.yml` 在 `workflow_dispatch` 或每次 `v*` 标签推送时为每个技能构建 `.skill` 归档，并附到对应的 GitHub Release。手动运行用于不打标签产出预发布制品；标签流程用于永久版本发布。
 

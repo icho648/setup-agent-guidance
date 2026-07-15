@@ -41,7 +41,7 @@ jobs:
             echo "::endgroup::"
           done
 
-      - name: Validate marketplace and plugin manifests
+      - name: Validate Claude Code and Codex plugin manifests
         run: |
           python - <<'PY'
           import json
@@ -51,6 +51,10 @@ jobs:
           marketplace = root / ".claude-plugin" / "marketplace.json"
           assert marketplace.is_file(), "missing .claude-plugin/marketplace.json"
           data = json.loads(marketplace.read_text())
+          codex_marketplace = root / ".agents" / "plugins" / "marketplace.json"
+          assert codex_marketplace.is_file(), "missing .agents/plugins/marketplace.json"
+          codex_data = json.loads(codex_marketplace.read_text())
+          codex_plugins = {p["name"]: p for p in codex_data.get("plugins", [])}
 
           assert "name" in data and data["name"], "marketplace.json missing name"
           assert "plugins" in data and isinstance(data["plugins"], list) and data["plugins"], \
@@ -70,6 +74,22 @@ jobs:
               mdata = json.loads(manifest.read_text())
               assert mdata.get("name") == plug["name"], \
                   f"plugin {plug['name']} plugin.json name mismatch: {mdata.get('name')}"
+              assert mdata.get("description") == plug["description"], \
+                  f"plugin {plug['name']} Claude description mismatch"
+              codex_entry = codex_plugins.get(plug["name"])
+              assert codex_entry, f"plugin {plug['name']} missing from Codex marketplace"
+              assert codex_entry.get("source") == {"source": "local", "path": source}, \
+                  f"plugin {plug['name']} Codex source mismatch"
+              codex_manifest = plug_dir / ".codex-plugin" / "plugin.json"
+              assert codex_manifest.is_file(), \
+                  f"plugin {plug['name']} missing .codex-plugin/plugin.json"
+              cdata = json.loads(codex_manifest.read_text())
+              assert cdata.get("name") == plug["name"], \
+                  f"plugin {plug['name']} Codex manifest name mismatch"
+              assert cdata.get("description") == plug["description"], \
+                  f"plugin {plug['name']} Codex description mismatch"
+              assert cdata.get("skills") == "./skills/", \
+                  f"plugin {plug['name']} Codex skills path must be ./skills/"
               skill_root = plug_dir / "skills" / plug["name"]
               assert skill_root.is_dir(), \
                   f"plugin {plug['name']} missing skills/{plug['name']}/"
@@ -79,6 +99,8 @@ jobs:
 
           names = [p["name"] for p in data["plugins"]]
           assert len(names) == len(set(names)), f"duplicate plugin names: {names}"
+          assert set(names) == set(codex_plugins), \
+              f"Claude/Codex marketplace plugin mismatch: {names} vs {list(codex_plugins)}"
           print(f"marketplace {data['name']} lists {len(names)} plugin(s): {names}")
           PY
 
