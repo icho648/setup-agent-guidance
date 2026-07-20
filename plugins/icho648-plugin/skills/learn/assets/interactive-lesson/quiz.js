@@ -58,8 +58,16 @@
       });
       setFeedback(question, "", "");
     });
+    delete quiz.dataset.lastSummary;
     const summary = quiz.querySelector("[data-summary]");
     if (summary) summary.textContent = "已清空本轮答案，可以重新尝试。";
+  }
+
+  function invalidateSummary(quiz) {
+    if (!quiz.dataset.lastSummary) return;
+    delete quiz.dataset.lastSummary;
+    const summary = quiz.querySelector("[data-summary]");
+    if (summary) summary.textContent = "答案已修改，请重新检查以更新结果。";
   }
 
   async function copyText(value, output) {
@@ -132,6 +140,9 @@
     });
     quiz.querySelector("[data-action='copy']")?.addEventListener("click", () => {
       copyText(buildResultText(quiz), quiz.querySelector("[data-summary]"));
+    });
+    quiz.querySelectorAll("input[type='radio']").forEach((input) => {
+      input.addEventListener("change", () => invalidateSummary(quiz));
     });
   });
 
