@@ -8,7 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Claude Code plugin marketplace: `.claude-plugin/marketplace.json` registers the `icho648-plugin` plugin (skills: `setup-agent-guidance`, `grounded-explainer`), with a `.claude-plugin/plugin.json` manifest, so the repository is searchable and installable via `/plugin marketplace add icho648/skills`.
+- `write-prd`, `implement-prd`, and `review-prd-implementation` as one portable PRD authoring, delivery, Standards/Spec review, and acceptance workflow.
+- `learn` for persistent, evidence-based learning state, real practice, transfer checks, and optional offline interactive lessons.
+- Claude Code plugin marketplace: `.claude-plugin/marketplace.json` registers the `icho648-plugin` plugin and its six skills, with a `.claude-plugin/plugin.json` manifest, so the repository is searchable and installable via `/plugin marketplace add icho648/skills`.
 - `grounded-explainer` skill: explains an object's unique core and necessary implementation from a concrete scenario and the existing problem it solves; triggered only by explicit invocation (`$grounded-explainer` in Codex or `/icho648-plugin:grounded-explainer` in Claude Code).
 - Per-plugin `LICENSE` so each installed plugin carries its MIT notice independently of the repository root.
 - Codex plugin manifests and a repo-local `.agents/plugins/marketplace.json` that expose the same skills through `codex plugin`.
@@ -17,8 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `.gitignore` entries for `*.skill`, `.skill-inline.md`, and `.venv/` to keep build artifacts out of the working tree.
 
 ### Changed
+- Bumped both Claude Code and Codex plugin manifests to `1.1.0` and refreshed marketplace metadata, starter prompts, and bilingual documentation for all six skills.
+- Made cross-skill PRD workflow references client-neutral while documenting the native Codex and namespaced Claude Code invocation forms.
 - Merged the `setup-agent-guidance` and `grounded-explainer` plugins into a single `icho648-plugin` that ships both skills; the Claude Code invocation for the explainer is now `/icho648-plugin:grounded-explainer`.
-- Repository restructured from a single root skill package into a marketplace: the `setup-agent-guidance` skill now lives under `plugins/setup-agent-guidance/skills/setup-agent-guidance/`, with its READMEs moved alongside.
+- Repository restructured from a single root skill package into a marketplace: the `setup-agent-guidance` skill now lives under `plugins/icho648-plugin/skills/setup-agent-guidance/`, with its READMEs moved alongside.
 - `validate.yml` now validates every skill package under `plugins/*/skills/*/` and checks the marketplace and plugin manifests, instead of validating the repository root as one skill.
 - `release.yml` now builds one `.skill` archive per skill from its own directory.
 - Root `README.md` and `README.zh-CN.md` rewritten as marketplace documentation; `AGENTS.md` updated to describe the marketplace maintenance model.

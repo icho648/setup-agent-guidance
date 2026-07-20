@@ -6,7 +6,7 @@
 
 [English](README.md)
 
-一个可安装的 Claude Code 与 Codex 插件，打包 `icho648` 的两个便携 Agent Skills：持久项目代理指导设置，以及落地解释。
+一个可安装的 Claude Code 与 Codex 插件，打包 `icho648` 的六个便携 Agent Skills：持久项目指南、落地解释、完整 PRD 交付闭环，以及基于证据的长期学习。
 
 ## 技能
 
@@ -31,6 +31,39 @@
 - 从具体场景讲起，不做概念巡礼；必要时用流程图、伪代码或精确代码打开对象内部机制。
 - 长度由理解需要决定，而不是追求最短；保留完整解释主线。
 
+### write-prd
+
+把 PRD 创建或修订为简洁、持久的产品契约，而不是实施计划。
+
+- 分开事实、已确认决策、假设、待定问题和建议。
+- 定义可观察产品行为、不变量、硬约束、自治边界和可追溯 AC。
+- 遵循当前工作区惯例；除非用户只要聊天内容，否则默认写入 Markdown。
+
+### implement-prd
+
+从固定 Git 基线开始实施已确认 PRD，并经过审阅和有证据的验收。
+
+- 在 Plan Mode 下生成决策完整、便于理解的实施计划。
+- 把产品行为和约束映射到 AC、验证入口和可独立审阅的 Diff。
+- 最终检查和逐条 AC 验收前，强制执行 `review-prd-implementation` 闭环。
+- `review-prd-implementation` 是硬依赖：以独立 `.skill` 归档安装 `implement-prd` 时，必须同时安装 `review-prd-implementation`，否则强制审阅步骤无法运行。
+
+### review-prd-implementation
+
+并行执行只读 Standards / Spec 双轴审阅，只允许主 Agent 修改实现，并复用原审阅 Agent 完成闭环。
+
+- 分开仓库规范和产品契约两个审阅轴。
+- 记录稳定 finding 编号、严重度、证据、处置、定向检查和待决策项。
+- 在 Codex 与 Claude Code 中使用各自可用的 follow-up 或 resume 等价机制。
+
+### learn
+
+在 `.learning/` 下维护长期学习状态，并且只根据学习者实际产出的证据提高能力等级。
+
+- 分开学习进度与已经证明的能力。
+- 通过真实任务、检索、精确反馈和迁移检查推进掌握。
+- 只有交互明显改善练习时，才使用随 Skill 提供的离线交互课程资源。
+
 ## 仓库结构
 
 ```text
@@ -39,19 +72,16 @@ plugins/icho648-plugin/
 ├── .codex-plugin/plugin.json    # Codex 插件清单
 ├── skills/
 │   ├── setup-agent-guidance/    # Agent Skills 包
-│   │   ├── SKILL.md
-│   │   ├── agents/openai.yaml   # 可选 Codex UI 元数据
-│   │   ├── assets/              # 本地化模板
-│   │   └── references/          # 本地化上手流程
-│   └── grounded-explainer/      # Agent Skills 包
-│       ├── SKILL.md
-│       ├── references/explanation-workflow.md
-│       └── agents/openai.yaml
+│   ├── grounded-explainer/
+│   ├── write-prd/
+│   ├── implement-prd/
+│   ├── review-prd-implementation/
+│   └── learn/                   # Agent Skills 包
 ├── README.md
 └── README.zh-CN.md
 ```
 
-本插件在 `skills/` 下提供两个 Agent Skills 包。仓库根的 Claude Code 与 Codex 市场清单都指向这个插件，详见仓库根 [README](../../README.zh-CN.md)。目标项目模板放在 `setup-agent-guidance` 的 `assets/` 下。
+本插件在 `skills/` 下提供六个 Agent Skills 包。仓库根的 Claude Code 与 Codex 市场清单都指向这个插件，详见仓库根 [README](../../README.zh-CN.md)。目标项目模板放在 `setup-agent-guidance` 的 `assets/` 下。
 
 ## 安装
 
@@ -83,6 +113,10 @@ Claude Code 全局：
 mkdir -p "$HOME/.claude/skills"
 cp -R plugins/icho648-plugin/skills/setup-agent-guidance "$HOME/.claude/skills/"
 cp -R plugins/icho648-plugin/skills/grounded-explainer "$HOME/.claude/skills/"
+cp -R plugins/icho648-plugin/skills/write-prd "$HOME/.claude/skills/"
+cp -R plugins/icho648-plugin/skills/implement-prd "$HOME/.claude/skills/"
+cp -R plugins/icho648-plugin/skills/review-prd-implementation "$HOME/.claude/skills/"
+cp -R plugins/icho648-plugin/skills/learn "$HOME/.claude/skills/"
 ```
 
 Codex 全局：
@@ -91,9 +125,13 @@ Codex 全局：
 mkdir -p "$HOME/.agents/skills"
 cp -R plugins/icho648-plugin/skills/setup-agent-guidance "$HOME/.agents/skills/"
 cp -R plugins/icho648-plugin/skills/grounded-explainer "$HOME/.agents/skills/"
+cp -R plugins/icho648-plugin/skills/write-prd "$HOME/.agents/skills/"
+cp -R plugins/icho648-plugin/skills/implement-prd "$HOME/.agents/skills/"
+cp -R plugins/icho648-plugin/skills/review-prd-implementation "$HOME/.agents/skills/"
+cp -R plugins/icho648-plugin/skills/learn "$HOME/.agents/skills/"
 ```
 
-随后显式调用技能（Claude Code：`/setup-agent-guidance` 或 `/grounded-explainer`；Codex：`$setup-agent-guidance` 或 `$grounded-explainer`），也可以直接要求 Agent 初始化项目 Agent 指南。
+插件安装时，Claude Code 使用带命名空间的入口，例如 `/icho648-plugin:implement-prd`；Codex 使用 `$implement-prd`。手动安装为独立 Skill 时，Claude Code 使用 `/implement-prd`。
 
 发布 `.skill` 归档时，请在 Actions 页面手动触发 `.github/workflows/release.yml`（workflow_dispatch），或推送 `v*` tag；不要把预打包产物提交到仓库。
 
@@ -117,15 +155,16 @@ cp -R plugins/icho648-plugin/skills/grounded-explainer "$HOME/.agents/skills/"
 - 英文：`*.en.md` 与 `*.en.template.md`
 - 简体中文：`*.zh-CN.md` 与 `*.zh-CN.template.md`
 
-`setup-agent-guidance` 提供本地化的 asset/reference 配对；`grounded-explainer` 以简体中文撰写。改动行为时，同一改动内更新每一对受影响的本地化资源，并保持标题、受管标记、占位符与要求在语义上同步。
+`setup-agent-guidance` 提供本地化的 asset/reference 配对；其他技能目前以简体中文编写，并使用语言中立的 Agent Skills 目录结构。改动行为时，同一改动内更新每一对受影响的本地化资源，并保持标题、受管标记、占位符与要求在语义上同步。
 
 ## 校验
 
 使用 Agent Skills 项目的参考校验器，在仓库根目录执行：
 
 ```bash
-python -m skills_ref.cli validate plugins/icho648-plugin/skills/setup-agent-guidance
-python -m skills_ref.cli validate plugins/icho648-plugin/skills/grounded-explainer
+for skill in plugins/icho648-plugin/skills/*; do
+  python -m skills_ref.cli validate "$skill"
+done
 ```
 
 仓库自带的 `.github/workflows/validate.yml` 会在每次 push 与 PR 时运行同样的检查，破坏 Skill 的改动会被 CI 自动拦截。
@@ -135,9 +174,10 @@ python -m skills_ref.cli validate plugins/icho648-plugin/skills/grounded-explain
 ## 参考来源
 
 - [Agent Skills 规范](https://agentskills.io/specification)
-- [Codex 自定义与 Skills](https://developers.openai.com/codex/concepts/customization#skills)
+- [Codex 插件结构](https://learn.chatgpt.com/docs/build-plugins#plugin-structure)
 - [OpenAI Codex ExecPlans 文章](https://developers.openai.com/cookbook/articles/codex_exec_plans)
-- [Claude Code Skills](https://code.claude.com/docs/en/skills)
+- [Claude Code 插件](https://code.claude.com/docs/zh-CN/plugins)
+- [Claude Code 插件市场](https://code.claude.com/docs/zh-CN/plugin-marketplaces)
 
 ExecPlan 模板改编自 OpenAI Cookbook 文章，并按照 `LICENSE` 中的 MIT 条款保留。
 

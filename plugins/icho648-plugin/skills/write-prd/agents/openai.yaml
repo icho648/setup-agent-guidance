@@ -1,0 +1,6 @@
+interface:
+  display_name: "编写 PRD"
+  short_description: "生成简洁、可追溯且适合 AI 持续演进的产品契约"
+  default_prompt: "使用 $write-prd 创建一份遵循工作区规范、简洁且可追溯的 PRD，明确产品行为、不变量、自治边界和验收规则。"
+policy:
+  allow_implicit_invocation: true

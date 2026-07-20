@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>交互练习：替换为本课标题</title>
+    <link rel="stylesheet" href="../assets/lesson.css" />
+    <script src="../assets/quiz.js" defer></script>
+  </head>
+  <body>
+    <main class="lesson">
+      <header class="lesson-header">
+        <p class="eyebrow">交互练习 · 约 10 分钟</p>
+        <h1>替换为一个可观察成果</h1>
+        <p>
+          完成后，你能够<strong>替换为具体能力</strong>。通过标准：替换为可验证表现。
+        </p>
+        <p class="meta">前置能力：替换或删除这一行。</p>
+      </header>
+
+      <section class="lesson-block" data-reveal>
+        <h2>1. 先回忆或预测</h2>
+        <p>在查看材料前回答，允许不确定。</p>
+        <label for="recall">替换为开放问题</label>
+        <textarea id="recall" placeholder="先写下你的判断和理由"></textarea>
+        <div class="actions">
+          <button
+            type="button"
+            class="secondary"
+            data-action="reveal"
+            aria-expanded="false"
+          >
+            查看核对标准
+          </button>
+        </div>
+        <div class="rubric" data-rubric hidden>
+          <strong>核对标准：</strong>替换为关键点。不要把它写成唯一标准答案。
+        </div>
+      </section>
+
+      <section class="lesson-block">
+        <h2>2. 最少必要知识</h2>
+        <p>替换为完成练习所需的简短解释，不要复制完整教材。</p>
+        <p>
+          一手资料：
+          <a href="https://example.com">替换为资料标题和链接</a>
+        </p>
+      </section>
+
+      <section class="lesson-block">
+        <h2>3. 针对性练习</h2>
+        <form class="quiz" data-quiz>
+          <fieldset
+            class="question"
+            data-question
+            data-answer="b"
+            data-correct-feedback="正确。替换为为什么这个判断成立。"
+            data-incorrect-feedback="再想想关键约束。替换为最小提示，不直接泄露答案。"
+          >
+            <legend>替换为能暴露常见误解的问题</legend>
+            <label class="option">
+              <input type="radio" name="q1" value="a" />
+              <span>替换为长度和语法相近的选项 A</span>
+            </label>
+            <label class="option">
+              <input type="radio" name="q1" value="b" />
+              <span>替换为长度和语法相近的选项 B</span>
+            </label>
+            <label class="option">
+              <input type="radio" name="q1" value="c" />
+              <span>替换为长度和语法相近的选项 C</span>
+            </label>
+            <p class="feedback" data-feedback aria-live="polite"></p>
+          </fieldset>
+
+          <div class="actions">
+            <button type="button" data-action="check">检查答案</button>
+            <button type="button" class="secondary" data-action="retry">重试</button>
+            <button type="button" class="secondary" data-action="copy">复制结果</button>
+          </div>
+          <p data-summary aria-live="polite">结果只用于反馈，不会自动更新掌握度。</p>
+        </form>
+      </section>
+
+      <section class="lesson-block">
+        <h2>4. 迁移到变化后的场景</h2>
+        <p>替换一个关键条件，让学习者重新判断、解释或执行真实任务。</p>
+        <p class="hint">
+          把答案和结果摘要发回给智能体，可以获得反馈；页面完成不等于能力已掌握。
+        </p>
+      </section>
+    </main>
+  </body>
+</html>

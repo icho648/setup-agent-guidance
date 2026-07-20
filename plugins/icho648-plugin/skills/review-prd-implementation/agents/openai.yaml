@@ -1,0 +1,4 @@
+interface:
+  display_name: "审阅 PRD 实现"
+  short_description: "双轴审阅、修订与复审闭环"
+  default_prompt: "使用 $review-prd-implementation 审阅当前 PRD 实现，执行 Standards / Spec 双轴审阅、主 Agent 修订和复审闭环。"

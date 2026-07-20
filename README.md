@@ -6,13 +6,13 @@
 
 [简体中文](README.zh-CN.md)
 
-A searchable Claude Code and Codex **plugin marketplace** hosting portable Agent Skills by `icho648`. Add this repository as a marketplace, then install the plugin to get both skills.
+A searchable Claude Code and Codex **plugin marketplace** hosting portable Agent Skills by `icho648`. Add this repository as a marketplace, then install the plugin to get all six skills.
 
 ## Plugins
 
 | Plugin | Skills | What it does |
 | --- | --- | --- |
-| [icho648-plugin](plugins/icho648-plugin/) | `setup-agent-guidance`, `grounded-explainer` | Initialize or refresh durable project agent guidance (detect `AGENTS.md`/`CLAUDE.md`, install a progressive workflow and `PLANS.md`, draft project-specific rules and `code_review.md`), and explain a technical object's unique core from a concrete scenario. The explainer is triggered only by explicit invocation (`$grounded-explainer` or `/icho648-plugin:grounded-explainer`). |
+| [icho648-plugin](plugins/icho648-plugin/) | `setup-agent-guidance`, `grounded-explainer`, `write-prd`, `implement-prd`, `review-prd-implementation`, `learn` | Set up durable agent guidance; explain technical objects from concrete scenarios; author, implement, and review PRDs with an evidence-backed loop; and maintain long-term learning state with real practice and demonstrated mastery. |
 
 ## Install
 
@@ -51,6 +51,10 @@ Claude Code, global:
 mkdir -p "$HOME/.claude/skills"
 cp -R plugins/icho648-plugin/skills/setup-agent-guidance "$HOME/.claude/skills/"
 cp -R plugins/icho648-plugin/skills/grounded-explainer "$HOME/.claude/skills/"
+cp -R plugins/icho648-plugin/skills/write-prd "$HOME/.claude/skills/"
+cp -R plugins/icho648-plugin/skills/implement-prd "$HOME/.claude/skills/"
+cp -R plugins/icho648-plugin/skills/review-prd-implementation "$HOME/.claude/skills/"
+cp -R plugins/icho648-plugin/skills/learn "$HOME/.claude/skills/"
 ```
 
 Codex, global:
@@ -59,9 +63,13 @@ Codex, global:
 mkdir -p "$HOME/.agents/skills"
 cp -R plugins/icho648-plugin/skills/setup-agent-guidance "$HOME/.agents/skills/"
 cp -R plugins/icho648-plugin/skills/grounded-explainer "$HOME/.agents/skills/"
+cp -R plugins/icho648-plugin/skills/write-prd "$HOME/.agents/skills/"
+cp -R plugins/icho648-plugin/skills/implement-prd "$HOME/.agents/skills/"
+cp -R plugins/icho648-plugin/skills/review-prd-implementation "$HOME/.agents/skills/"
+cp -R plugins/icho648-plugin/skills/learn "$HOME/.agents/skills/"
 ```
 
-Then invoke the skill explicitly (Claude Code: `/setup-agent-guidance` or `/grounded-explainer`; Codex: `$setup-agent-guidance` or `$grounded-explainer`).
+Plugin invocations are namespaced in Claude Code, for example `/icho648-plugin:write-prd`; Codex uses `$write-prd`. Manually installed standalone skills use `/write-prd` in Claude Code.
 
 ## Repository layout
 
@@ -76,15 +84,12 @@ Then invoke the skill explicitly (Claude Code: `/setup-agent-guidance` or `/grou
 │       ├── .claude-plugin/plugin.json
 │       ├── .codex-plugin/plugin.json
 │       ├── skills/
-│       │   ├── setup-agent-guidance/       # Agent Skills package
-│       │   │   ├── SKILL.md
-│       │   │   ├── agents/openai.yaml      # optional Codex UI metadata
-│       │   │   ├── assets/                 # localized templates
-│       │   │   └── references/             # localized onboarding procedure
-│       │   └── grounded-explainer/         # Agent Skills package
-│       │       ├── SKILL.md
-│       │       ├── references/explanation-workflow.md
-│       │       └── agents/openai.yaml
+│       │   ├── setup-agent-guidance/
+│       │   ├── grounded-explainer/
+│       │   ├── write-prd/
+│       │   ├── implement-prd/
+│       │   ├── review-prd-implementation/
+│       │   └── learn/                      # Agent Skills packages
 │       ├── README.md
 │       └── README.zh-CN.md
 ├── .github/                      # workflows and repository validator
@@ -113,15 +118,16 @@ Each skill keeps one identity and one canonical workflow in its `SKILL.md`. Loca
 - English: `*.en.md` and `*.en.template.md`
 - Simplified Chinese: `*.zh-CN.md` and `*.zh-CN.template.md`
 
-`setup-agent-guidance` ships localized asset/reference pairs. `grounded-explainer` is authored in Simplified Chinese. When changing behavior, update both localized members of every affected pair in the same change and keep headings, managed markers, placeholders, and requirements in semantic lockstep.
+`setup-agent-guidance` ships localized asset/reference pairs. The other skills are currently authored in Simplified Chinese and use language-neutral Agent Skills structure. When changing behavior, update both localized members of every affected pair in the same change and keep headings, managed markers, placeholders, and requirements in semantic lockstep.
 
 ## Validate
 
 Using the reference validator from the Agent Skills project:
 
 ```bash
-python -m skills_ref.cli validate plugins/icho648-plugin/skills/setup-agent-guidance
-python -m skills_ref.cli validate plugins/icho648-plugin/skills/grounded-explainer
+for skill in plugins/icho648-plugin/skills/*; do
+  python -m skills_ref.cli validate "$skill"
+done
 ```
 
 This repository also ships a GitHub Actions workflow at `.github/workflows/validate.yml` that validates every skill, both marketplace formats, Codex plugin manifests, localized resource pairs, and relative references on every push and pull request.
@@ -130,7 +136,8 @@ A second workflow at `.github/workflows/release.yml` builds a `.skill` archive p
 
 ## Sources
 
-- [Claude Code plugins and marketplaces](https://docs.claude.com/en/docs/claude-code/plugins)
+- [Claude Code plugins](https://code.claude.com/docs/en/plugins)
+- [Claude Code plugin marketplaces](https://code.claude.com/docs/en/plugin-marketplaces)
 - [Agent Skills specification](https://agentskills.io/specification)
 - [Codex customization and skills](https://developers.openai.com/codex/concepts/customization#skills)
 - [Claude Code skills](https://code.claude.com/docs/en/skills)

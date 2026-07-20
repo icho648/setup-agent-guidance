@@ -6,13 +6,13 @@
 
 [English](README.md)
 
-一个可搜索的 Claude Code 与 Codex **插件市场**，托管 `icho648` 的便携 Agent Skills。把本仓库添加为市场后，安装插件即可获得两个技能。
+一个可搜索的 Claude Code 与 Codex **插件市场**，托管 `icho648` 的便携 Agent Skills。把本仓库添加为市场后，安装插件即可获得全部六个技能。
 
 ## 插件
 
 | 插件 | 技能 | 作用 |
 | --- | --- | --- |
-| [icho648-plugin](plugins/icho648-plugin/) | `setup-agent-guidance`、`grounded-explainer` | 初始化或刷新持久的项目代理指导（检测 `AGENTS.md`/`CLAUDE.md`，安装渐进式工作流和 `PLANS.md`，生成项目专属规则与 `code_review.md`），以及从具体场景解释对象的独特核心。解释器仅在显式调用时触发（`$grounded-explainer` 或 `/icho648-plugin:grounded-explainer`）。 |
+| [icho648-plugin](plugins/icho648-plugin/) | `setup-agent-guidance`、`grounded-explainer`、`write-prd`、`implement-prd`、`review-prd-implementation`、`learn` | 设置持久 Agent 指南；从具体场景解释技术对象；通过有证据的闭环编写、实施和审阅 PRD；并用真实练习与已证明的掌握程度维护长期学习状态。 |
 
 ## 安装
 
@@ -51,6 +51,10 @@ Claude Code 全局：
 mkdir -p "$HOME/.claude/skills"
 cp -R plugins/icho648-plugin/skills/setup-agent-guidance "$HOME/.claude/skills/"
 cp -R plugins/icho648-plugin/skills/grounded-explainer "$HOME/.claude/skills/"
+cp -R plugins/icho648-plugin/skills/write-prd "$HOME/.claude/skills/"
+cp -R plugins/icho648-plugin/skills/implement-prd "$HOME/.claude/skills/"
+cp -R plugins/icho648-plugin/skills/review-prd-implementation "$HOME/.claude/skills/"
+cp -R plugins/icho648-plugin/skills/learn "$HOME/.claude/skills/"
 ```
 
 Codex 全局：
@@ -59,9 +63,13 @@ Codex 全局：
 mkdir -p "$HOME/.agents/skills"
 cp -R plugins/icho648-plugin/skills/setup-agent-guidance "$HOME/.agents/skills/"
 cp -R plugins/icho648-plugin/skills/grounded-explainer "$HOME/.agents/skills/"
+cp -R plugins/icho648-plugin/skills/write-prd "$HOME/.agents/skills/"
+cp -R plugins/icho648-plugin/skills/implement-prd "$HOME/.agents/skills/"
+cp -R plugins/icho648-plugin/skills/review-prd-implementation "$HOME/.agents/skills/"
+cp -R plugins/icho648-plugin/skills/learn "$HOME/.agents/skills/"
 ```
 
-随后显式调用技能（Claude Code：`/setup-agent-guidance` 或 `/grounded-explainer`；Codex：`$setup-agent-guidance` 或 `$grounded-explainer`）。
+插件安装时，Claude Code 使用带命名空间的入口，例如 `/icho648-plugin:write-prd`；Codex 使用 `$write-prd`。手动安装为独立 Skill 时，Claude Code 使用 `/write-prd`。
 
 ## 仓库结构
 
@@ -76,15 +84,12 @@ cp -R plugins/icho648-plugin/skills/grounded-explainer "$HOME/.agents/skills/"
 │       ├── .claude-plugin/plugin.json
 │       ├── .codex-plugin/plugin.json
 │       ├── skills/
-│       │   ├── setup-agent-guidance/       # Agent Skills 包
-│       │   │   ├── SKILL.md
-│       │   │   ├── agents/openai.yaml      # 可选 Codex UI 元数据
-│       │   │   ├── assets/                 # 本地化模板
-│       │   │   └── references/             # 本地化上手流程
-│       │   └── grounded-explainer/         # Agent Skills 包
-│       │       ├── SKILL.md
-│       │       ├── references/explanation-workflow.md
-│       │       └── agents/openai.yaml
+│       │   ├── setup-agent-guidance/
+│       │   ├── grounded-explainer/
+│       │   ├── write-prd/
+│       │   ├── implement-prd/
+│       │   ├── review-prd-implementation/
+│       │   └── learn/                      # Agent Skills 包
 │       ├── README.md
 │       └── README.zh-CN.md
 ├── .github/                      # 工作流与仓库校验器
@@ -113,15 +118,16 @@ cp -R plugins/icho648-plugin/skills/grounded-explainer "$HOME/.agents/skills/"
 - 英文：`*.en.md` 与 `*.en.template.md`
 - 简体中文：`*.zh-CN.md` 与 `*.zh-CN.template.md`
 
-`setup-agent-guidance` 提供本地化的 asset/reference 配对；`grounded-explainer` 以简体中文撰写。改动行为时，同一改动内更新每一对受影响的本地化资源，并保持标题、受管标记、占位符与要求在语义上同步。
+`setup-agent-guidance` 提供本地化的 asset/reference 配对；其他技能目前以简体中文编写，并使用语言中立的 Agent Skills 目录结构。改动行为时，同一改动内更新每一对受影响的本地化资源，并保持标题、受管标记、占位符与要求在语义上同步。
 
 ## 校验
 
 使用 Agent Skills 项目的参考校验器：
 
 ```bash
-python -m skills_ref.cli validate plugins/icho648-plugin/skills/setup-agent-guidance
-python -m skills_ref.cli validate plugins/icho648-plugin/skills/grounded-explainer
+for skill in plugins/icho648-plugin/skills/*; do
+  python -m skills_ref.cli validate "$skill"
+done
 ```
 
 本仓库还附带 `.github/workflows/validate.yml`，在每次 push 和 pull request 时校验所有技能、两种市场格式、Codex 插件清单、本地化资源配对与相对路径引用。
@@ -130,10 +136,11 @@ python -m skills_ref.cli validate plugins/icho648-plugin/skills/grounded-explain
 
 ## 参考
 
-- [Claude Code 插件与市场](https://docs.claude.com/en/docs/claude-code/plugins)
+- [Claude Code 插件](https://code.claude.com/docs/zh-CN/plugins)
+- [Claude Code 插件市场](https://code.claude.com/docs/zh-CN/plugin-marketplaces)
 - [Agent Skills 规范](https://agentskills.io/specification)
 - [Codex 定制与技能](https://developers.openai.com/codex/concepts/customization#skills)
-- [Claude Code 技能](https://code.claude.com/docs/en/skills)
+- [Claude Code 技能](https://code.claude.com/docs/zh-CN/skills)
 
 ## 许可
 
