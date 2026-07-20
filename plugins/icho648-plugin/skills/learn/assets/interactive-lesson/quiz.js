@@ -142,7 +142,11 @@
       copyText(buildResultText(quiz), quiz.querySelector("[data-summary]"));
     });
     quiz.querySelectorAll("input[type='radio']").forEach((input) => {
-      input.addEventListener("change", () => invalidateSummary(quiz));
+      input.addEventListener("change", () => {
+        const question = input.closest("[data-question]");
+        if (question) setFeedback(question, "", "");
+        invalidateSummary(quiz);
+      });
     });
   });
 
