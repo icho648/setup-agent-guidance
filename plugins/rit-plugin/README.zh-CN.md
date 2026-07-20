@@ -8,7 +8,7 @@ Rit 的个人 Claude Code 与 Codex 工作流插件包。
 - `grounded-explainer`：仅显式调用、问题优先的技术解释。
 - `learn`：通过真实练习维护有证据的学习状态。
 
-这些独立的个人工作流共用一个安装和版本边界。PRD 交付工作流仍通过 `prd-workflow` 单独安装。
+作为一组个人工作流打包，统一安装与版本；每个 skill 仍可独立使用。PRD 交付工作流仍通过 `prd-workflow` 单独安装。
 
 ## 安装
 
