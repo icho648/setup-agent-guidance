@@ -22,7 +22,7 @@ This repository is a Claude Code and Codex **plugin marketplace**, not one monol
 - Preserve the English ExecPlan source and the Chinese translation in semantic lockstep (applies to `setup-agent-guidance`).
 - When adding, renaming, or removing a plugin, update both marketplace registries and both client manifests in the same change, and keep the plugin directory name, source paths, manifest names, and skill directory name consistent.
 - Keep marketplace descriptions in sync with the corresponding client manifests and canonical skill behavior.
-- Use a plugin as the install, version, and dependency boundary: keep hard-dependent skills together, but do not bundle unrelated skills merely because they share a publisher.
+- Use a plugin as the install, version, and dependency boundary: keep hard-dependent skills together, and only bundle otherwise-independent skills when they share a coherent use context (for example, one publisher's personal workflow set that users install together); do not bundle skills that share only a publisher.
 
 ## Verification
 

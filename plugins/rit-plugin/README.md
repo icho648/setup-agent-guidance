@@ -8,7 +8,7 @@ Rit's personal Claude Code and Codex workflow bundle.
 - `grounded-explainer` — explicitly invoked, problem-first technical explanation.
 - `learn` — maintain evidence-based learning state through real practice.
 
-These independent personal workflows share one installation and version boundary. The PRD delivery workflow remains separately installable as `prd-workflow`.
+Grouped as one personal workflow set so they install and version together; each skill remains independently usable. The PRD delivery workflow is separately installable as `prd-workflow`.
 
 ## Install
 

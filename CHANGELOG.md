@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Two independently installable plugins: `rit-plugin` for Rit’s personal workflows and `prd-workflow` for the PRD delivery loop.
 - `write-prd`, `implement-prd`, and `review-prd-implementation` as one portable PRD authoring, delivery, Standards/Spec review, and acceptance workflow.
 - `learn` for persistent, evidence-based learning state, real practice, transfer checks, and optional offline interactive lessons.
-- Claude Code plugin marketplace: `.claude-plugin/marketplace.json` registers all four plugins and their six skills so the repository is searchable and installable through `/plugin marketplace add`.
+- Claude Code plugin marketplace: `.claude-plugin/marketplace.json` registers both plugins and their six skills so the repository is searchable and installable through `/plugin marketplace add`.
 - `grounded-explainer` skill: explains an object's unique core and necessary implementation from a concrete scenario and the existing problem it solves; triggered only by explicit invocation (`$grounded-explainer` in Codex or `/rit-plugin:grounded-explainer` in Claude Code).
 - Per-plugin `LICENSE` so each installed plugin carries its MIT notice independently of the repository root.
 - Codex plugin manifests and a repo-local `.agents/plugins/marketplace.json` that expose the same skills through `codex plugin`.
@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unified the GitHub repository name and Marketplace ID as `flowcrafter`.
 - Grouped `setup-agent-guidance`, `grounded-explainer`, and `learn` under `rit-plugin`.
 - Kept `write-prd`, `implement-prd`, and `review-prd-implementation` together in `prd-workflow` because review is a hard runtime dependency of implementation.
+- Refined the `AGENTS.md` plugin-bundling rule to permit grouping skills that share a coherent use context (e.g. a personal workflow set) under one plugin, while still prohibiting bundles justified only by a shared publisher.
 - Replaced the former `1.1.0` bundle manifests with `1.0.0` manifests for each independently versioned plugin and refreshed marketplace metadata, starter prompts, and bilingual documentation.
 - Made cross-skill PRD workflow references client-neutral while documenting the native Codex and namespaced Claude Code invocation forms.
 - Moved `setup-agent-guidance`, `grounded-explainer`, and `learn` under `plugins/rit-plugin/skills/`.
