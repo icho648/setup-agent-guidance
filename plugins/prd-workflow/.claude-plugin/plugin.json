@@ -1,0 +1,10 @@
+{
+  "name": "prd-workflow",
+  "version": "1.0.0",
+  "description": "Author, implement, and review PRDs through one evidence-backed delivery workflow.",
+  "author": {
+    "name": "icho648"
+  },
+  "homepage": "https://github.com/icho648/flowcrafter/tree/main/plugins/prd-workflow",
+  "license": "MIT"
+}

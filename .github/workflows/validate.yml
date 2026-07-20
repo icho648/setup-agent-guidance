@@ -72,6 +72,8 @@ jobs:
           codex_plugins = {p["name"]: p for p in codex_data.get("plugins", [])}
 
           assert "name" in data and data["name"], "marketplace.json missing name"
+          assert data["name"] == codex_data.get("name"), \
+              f"Claude/Codex marketplace name mismatch: {data['name']} vs {codex_data.get('name')}"
           assert "plugins" in data and isinstance(data["plugins"], list) and data["plugins"], \
               "marketplace.json must list at least one plugin"
 

@@ -8,10 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Two independently installable plugins: `rit-plugin` for Rit’s personal workflows and `prd-workflow` for the PRD delivery loop.
 - `write-prd`, `implement-prd`, and `review-prd-implementation` as one portable PRD authoring, delivery, Standards/Spec review, and acceptance workflow.
 - `learn` for persistent, evidence-based learning state, real practice, transfer checks, and optional offline interactive lessons.
-- Claude Code plugin marketplace: `.claude-plugin/marketplace.json` registers the `icho648-plugin` plugin and its six skills, with a `.claude-plugin/plugin.json` manifest, so the repository is searchable and installable via `/plugin marketplace add icho648/skills`.
-- `grounded-explainer` skill: explains an object's unique core and necessary implementation from a concrete scenario and the existing problem it solves; triggered only by explicit invocation (`$grounded-explainer` in Codex or `/icho648-plugin:grounded-explainer` in Claude Code).
+- Claude Code plugin marketplace: `.claude-plugin/marketplace.json` registers all four plugins and their six skills so the repository is searchable and installable through `/plugin marketplace add`.
+- `grounded-explainer` skill: explains an object's unique core and necessary implementation from a concrete scenario and the existing problem it solves; triggered only by explicit invocation (`$grounded-explainer` in Codex or `/rit-plugin:grounded-explainer` in Claude Code).
 - Per-plugin `LICENSE` so each installed plugin carries its MIT notice independently of the repository root.
 - Codex plugin manifests and a repo-local `.agents/plugins/marketplace.json` that expose the same skills through `codex plugin`.
 - Version-stamped Core block markers (`agent-guidance:core:version=<X.Y.Z>`) so the skill can detect in-place upgrades without comparing full block content.
@@ -19,10 +20,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `.gitignore` entries for `*.skill`, `.skill-inline.md`, and `.venv/` to keep build artifacts out of the working tree.
 
 ### Changed
-- Bumped both Claude Code and Codex plugin manifests to `1.1.0` and refreshed marketplace metadata, starter prompts, and bilingual documentation for all six skills.
+- Recast the repository as the `flowcrafter` multi-plugin marketplace and moved the six skills out of the monolithic `icho648-plugin`.
+- Unified the GitHub repository name and Marketplace ID as `flowcrafter`.
+- Grouped `setup-agent-guidance`, `grounded-explainer`, and `learn` under `rit-plugin`.
+- Kept `write-prd`, `implement-prd`, and `review-prd-implementation` together in `prd-workflow` because review is a hard runtime dependency of implementation.
+- Replaced the former `1.1.0` bundle manifests with `1.0.0` manifests for each independently versioned plugin and refreshed marketplace metadata, starter prompts, and bilingual documentation.
 - Made cross-skill PRD workflow references client-neutral while documenting the native Codex and namespaced Claude Code invocation forms.
-- Merged the `setup-agent-guidance` and `grounded-explainer` plugins into a single `icho648-plugin` that ships both skills; the Claude Code invocation for the explainer is now `/icho648-plugin:grounded-explainer`.
-- Repository restructured from a single root skill package into a marketplace: the `setup-agent-guidance` skill now lives under `plugins/icho648-plugin/skills/setup-agent-guidance/`, with its READMEs moved alongside.
+- Moved `setup-agent-guidance`, `grounded-explainer`, and `learn` under `plugins/rit-plugin/skills/`.
 - `validate.yml` now validates every skill package under `plugins/*/skills/*/` and checks the marketplace and plugin manifests, instead of validating the repository root as one skill.
 - `release.yml` now builds one `.skill` archive per skill from its own directory.
 - Root `README.md` and `README.zh-CN.md` rewritten as marketplace documentation; `AGENTS.md` updated to describe the marketplace maintenance model.

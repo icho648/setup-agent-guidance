@@ -1,17 +1,17 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
-  "name": "icho648-skills",
-  "description": "Searchable collection of portable Agent Skills by icho648 for project guidance, grounded explanation, PRD delivery, review, and long-term learning.",
+  "name": "flowcrafter",
+  "description": "A Claude Code and Codex marketplace for crafted agent workflows covering project guidance, explanation, PRD delivery, review, and learning.",
   "owner": {
     "name": "icho648"
   },
   "plugins": [
     {
-      "name": "icho648-plugin",
-      "description": "Portable agent workflows for project guidance, grounded explanation, PRD authoring, implementation and review, plus evidence-based long-term learning.",
-      "source": "./plugins/icho648-plugin",
+      "name": "rit-plugin",
+      "description": "Rit's project-guidance, grounded-explanation, and evidence-based learning workflows.",
+      "source": "./plugins/rit-plugin",
       "category": "productivity",
-      "homepage": "https://github.com/icho648/skills/tree/main/plugins/icho648-plugin",
+      "homepage": "https://github.com/icho648/flowcrafter/tree/main/plugins/rit-plugin",
       "author": {
         "name": "icho648"
       },
@@ -21,17 +21,31 @@
         "claudemd",
         "guidance",
         "onboarding",
-        "code-review",
-        "execplan",
-        "prd",
-        "product-requirements",
-        "implementation-review",
         "explanation",
-        "learning",
         "education",
         "mental-model",
         "concept",
-        "implementation"
+        "learning",
+        "practice",
+        "mastery"
+      ]
+    },
+    {
+      "name": "prd-workflow",
+      "description": "Author, implement, and review PRDs through one evidence-backed delivery workflow.",
+      "source": "./plugins/prd-workflow",
+      "category": "productivity",
+      "homepage": "https://github.com/icho648/flowcrafter/tree/main/plugins/prd-workflow",
+      "author": {
+        "name": "icho648"
+      },
+      "keywords": [
+        "prd",
+        "product-requirements",
+        "implementation",
+        "code-review",
+        "acceptance",
+        "specification"
       ]
     }
   ]
