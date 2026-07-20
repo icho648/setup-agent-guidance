@@ -34,6 +34,8 @@ description: 当用户要求根据已确认的 PRD、产品规格或关联 ticke
 
 形成可审 Diff 后、最终完整检查前，加载同插件的 `review-prd-implementation` Skill，传入实施前基线、固定点、PRD/ticket、本次契约范围、当前工作区和已知风险。固定双轴审阅不是可选项。
 
+`review-prd-implementation` 是本 Skill 的硬依赖，必须随插件一同安装。若仅安装了独立的 `implement-prd` 归档而无法加载 `review-prd-implementation`，停止并要求用户补装（安装完整的 `icho648-plugin` 即同时获得两者），不得跳过审阅或自行替代审阅逻辑。
+
 主 Agent 只负责评估 findings 的合理性并保持循环：
 
 - `needs_revision`：修改、定向验证并继续原审阅实例；

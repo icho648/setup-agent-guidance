@@ -65,7 +65,7 @@
   async function copyText(value, output) {
     try {
       await navigator.clipboard.writeText(value);
-      if (output) output.textContent = "结果摘要已复制，请在对话中提交以获得反馈。";
+      if (output) output.textContent = "结果与答案已复制，请在对话中提交以获得反馈。";
     } catch {
       const helper = document.createElement("textarea");
       helper.value = value;
@@ -76,8 +76,50 @@
       helper.select();
       document.execCommand("copy");
       helper.remove();
-      if (output) output.textContent = "结果摘要已复制，请在对话中提交以获得反馈。";
+      if (output) output.textContent = "结果与答案已复制，请在对话中提交以获得反馈。";
     }
+  }
+
+  function buildResultText(quiz) {
+    const title = document.querySelector("h1")?.textContent || "交互练习";
+    const lines = [title, ""];
+
+    const textareas = document.querySelectorAll(".lesson textarea");
+    if (textareas.length) {
+      lines.push("自由作答：");
+      textareas.forEach((ta, i) => {
+        const label =
+          (ta.labels && ta.labels[0] && ta.labels[0].textContent) ||
+          `第 ${i + 1} 项`;
+        const answer = text(ta.value) || "（未填写）";
+        lines.push(`- ${label}：${answer}`);
+      });
+      lines.push("");
+    }
+
+    const questions = [...quiz.querySelectorAll("[data-question]")];
+    if (questions.length) {
+      lines.push("选择题：");
+      questions.forEach((question, i) => {
+        const legend =
+          question.querySelector("legend")?.textContent || `第 ${i + 1} 题`;
+        const selected = question.querySelector("input[type='radio']:checked");
+        const expected = text(question.dataset.answer);
+        let answerText = "未作答";
+        let mark = " ✗";
+        if (selected) {
+          answerText =
+            selected.parentElement?.textContent?.trim() || selected.value;
+          mark = text(selected.value) === expected ? " ✓" : " ✗";
+        }
+        lines.push(`- ${legend}：${answerText}${mark}`);
+      });
+      lines.push("");
+    }
+
+    const summary = quiz.dataset.lastSummary || "尚未完成检查。";
+    lines.push(`结果：${summary}`);
+    return lines.join("\n");
   }
 
   document.querySelectorAll("[data-quiz]").forEach((quiz) => {
@@ -89,9 +131,7 @@
       retryQuiz(quiz);
     });
     quiz.querySelector("[data-action='copy']")?.addEventListener("click", () => {
-      const title = document.querySelector("h1")?.textContent || "交互练习";
-      const summary = quiz.dataset.lastSummary || "尚未完成检查。";
-      copyText(`${title}\n${summary}`, quiz.querySelector("[data-summary]"));
+      copyText(buildResultText(quiz), quiz.querySelector("[data-summary]"));
     });
   });
 

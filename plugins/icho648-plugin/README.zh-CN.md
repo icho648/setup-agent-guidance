@@ -46,6 +46,7 @@
 - 在 Plan Mode 下生成决策完整、便于理解的实施计划。
 - 把产品行为和约束映射到 AC、验证入口和可独立审阅的 Diff。
 - 最终检查和逐条 AC 验收前，强制执行 `review-prd-implementation` 闭环。
+- `review-prd-implementation` 是硬依赖：以独立 `.skill` 归档安装 `implement-prd` 时，必须同时安装 `review-prd-implementation`，否则强制审阅步骤无法运行。
 
 ### review-prd-implementation
 

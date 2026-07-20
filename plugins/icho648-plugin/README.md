@@ -46,6 +46,7 @@ Implements a confirmed PRD from a fixed Git baseline through review and evidence
 - Produces a decision-complete Plan Mode plan when planning is requested.
 - Maps product behavior and constraints to ACs, verification entries, and an independently reviewable Diff.
 - Requires the `review-prd-implementation` loop before final checks and per-AC acceptance reporting.
+- `review-prd-implementation` is a hard dependency: installing `implement-prd` as a standalone `.skill` archive requires installing `review-prd-implementation` alongside it, or the mandatory review step cannot run.
 
 ### review-prd-implementation
 
