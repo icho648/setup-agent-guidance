@@ -6,7 +6,7 @@
 
 [简体中文](README.zh-CN.md)
 
-An installable Claude Code and Codex plugin bundling two portable Agent Skills by `icho648`: durable project agent guidance setup, and grounded explanation.
+An installable Claude Code and Codex plugin bundling six portable Agent Skills by `icho648`: durable project guidance, grounded explanation, a complete PRD delivery loop, and evidence-based long-term learning.
 
 ## Skills
 
@@ -31,6 +31,38 @@ Explains an object's unique core and necessary implementation starting from a co
 - Starts from concrete scenarios, no concept tours; opens internal mechanisms with flowcharts, pseudocode, or precise code when needed.
 - Length is driven by understanding, not minimization; preserves the complete explanation thread.
 
+### write-prd
+
+Creates or revises concise PRDs as durable product contracts rather than implementation plans.
+
+- Separates facts, confirmed decisions, assumptions, open questions, and recommendations.
+- Defines observable product behavior, invariants, hard constraints, autonomy boundaries, and traceable ACs.
+- Uses the current workspace's conventions and writes Markdown by default unless the user requests chat-only output.
+
+### implement-prd
+
+Implements a confirmed PRD from a fixed Git baseline through review and evidence-backed acceptance.
+
+- Produces a decision-complete Plan Mode plan when planning is requested.
+- Maps product behavior and constraints to ACs, verification entries, and an independently reviewable Diff.
+- Requires the `review-prd-implementation` loop before final checks and per-AC acceptance reporting.
+
+### review-prd-implementation
+
+Runs a read-only Standards / Spec review pair, lets only the main Agent revise the implementation, and reuses the original reviewers for closure.
+
+- Keeps repository standards and the product contract on separate review axes.
+- Tracks stable finding IDs, severity, evidence, disposition, focused rechecks, and unresolved decisions.
+- Supports equivalent follow-up or resume mechanisms in Codex and Claude Code.
+
+### learn
+
+Maintains long-term learning state under `.learning/` and advances mastery only from evidence produced by the learner.
+
+- Separates learning progress from demonstrated capability.
+- Uses real tasks, retrieval, precise feedback, and transfer checks before raising mastery.
+- Includes optional offline interactive-lesson assets when interaction materially improves practice.
+
 ## Repository layout
 
 ```text
@@ -39,19 +71,16 @@ plugins/icho648-plugin/
 ├── .codex-plugin/plugin.json    # Codex plugin manifest
 ├── skills/
 │   ├── setup-agent-guidance/    # Agent Skills package
-│   │   ├── SKILL.md
-│   │   ├── agents/openai.yaml   # optional Codex UI metadata
-│   │   ├── assets/              # localized templates
-│   │   └── references/          # localized onboarding procedure
-│   └── grounded-explainer/      # Agent Skills package
-│       ├── SKILL.md
-│       ├── references/explanation-workflow.md
-│       └── agents/openai.yaml
+│   ├── grounded-explainer/
+│   ├── write-prd/
+│   ├── implement-prd/
+│   ├── review-prd-implementation/
+│   └── learn/                   # Agent Skills packages
 ├── README.md
 └── README.zh-CN.md
 ```
 
-This plugin ships two Agent Skills packages under `skills/`. The repository-root Claude Code and Codex marketplace manifests both point at this plugin; see the root [README](../../README.md). Target-project templates live under `setup-agent-guidance`'s `assets/`.
+This plugin ships six Agent Skills packages under `skills/`. The repository-root Claude Code and Codex marketplace manifests both point at this plugin; see the root [README](../../README.md). Target-project templates live under `setup-agent-guidance`'s `assets/`.
 
 ## Install
 
@@ -83,6 +112,10 @@ Claude Code, global:
 mkdir -p "$HOME/.claude/skills"
 cp -R plugins/icho648-plugin/skills/setup-agent-guidance "$HOME/.claude/skills/"
 cp -R plugins/icho648-plugin/skills/grounded-explainer "$HOME/.claude/skills/"
+cp -R plugins/icho648-plugin/skills/write-prd "$HOME/.claude/skills/"
+cp -R plugins/icho648-plugin/skills/implement-prd "$HOME/.claude/skills/"
+cp -R plugins/icho648-plugin/skills/review-prd-implementation "$HOME/.claude/skills/"
+cp -R plugins/icho648-plugin/skills/learn "$HOME/.claude/skills/"
 ```
 
 Codex, global:
@@ -91,9 +124,13 @@ Codex, global:
 mkdir -p "$HOME/.agents/skills"
 cp -R plugins/icho648-plugin/skills/setup-agent-guidance "$HOME/.agents/skills/"
 cp -R plugins/icho648-plugin/skills/grounded-explainer "$HOME/.agents/skills/"
+cp -R plugins/icho648-plugin/skills/write-prd "$HOME/.agents/skills/"
+cp -R plugins/icho648-plugin/skills/implement-prd "$HOME/.agents/skills/"
+cp -R plugins/icho648-plugin/skills/review-prd-implementation "$HOME/.agents/skills/"
+cp -R plugins/icho648-plugin/skills/learn "$HOME/.agents/skills/"
 ```
 
-Then invoke a skill explicitly (Claude Code: `/setup-agent-guidance` or `/grounded-explainer`; Codex: `$setup-agent-guidance` or `$grounded-explainer`), or ask the agent to initialize project agent guidance.
+Plugin invocations are namespaced in Claude Code, for example `/icho648-plugin:implement-prd`; Codex uses `$implement-prd`. Manually installed standalone skills use `/implement-prd` in Claude Code.
 
 To publish packaged `.skill` archives, trigger `.github/workflows/release.yml` from the Actions tab (workflow_dispatch) or push a `v*` tag; do not commit prebuilt archives into the repository.
 
@@ -117,15 +154,16 @@ Each skill keeps one identity and one canonical workflow in its `SKILL.md`. Loca
 - English: `*.en.md` and `*.en.template.md`
 - Simplified Chinese: `*.zh-CN.md` and `*.zh-CN.template.md`
 
-`setup-agent-guidance` ships localized asset/reference pairs. `grounded-explainer` is authored in Simplified Chinese. When changing behavior, update both localized members of every affected pair in the same change and keep headings, managed markers, placeholders, and requirements in semantic lockstep.
+`setup-agent-guidance` ships localized asset/reference pairs. The other skills are currently authored in Simplified Chinese and use language-neutral Agent Skills structure. When changing behavior, update both localized members of every affected pair in the same change and keep headings, managed markers, placeholders, and requirements in semantic lockstep.
 
 ## Validate
 
 Using the reference validator from the Agent Skills project, run from the repository root:
 
 ```bash
-python -m skills_ref.cli validate plugins/icho648-plugin/skills/setup-agent-guidance
-python -m skills_ref.cli validate plugins/icho648-plugin/skills/grounded-explainer
+for skill in plugins/icho648-plugin/skills/*; do
+  python -m skills_ref.cli validate "$skill"
+done
 ```
 
 This repository also ships a GitHub Actions workflow at `.github/workflows/validate.yml` that runs the same check on every push and pull request, so PRs that break a skill will fail CI automatically.
@@ -135,9 +173,10 @@ A second workflow at `.github/workflows/release.yml` packages each skill as a `.
 ## Sources
 
 - [Agent Skills specification](https://agentskills.io/specification)
-- [Codex customization and skills](https://developers.openai.com/codex/concepts/customization#skills)
+- [Codex plugin structure](https://learn.chatgpt.com/docs/build-plugins#plugin-structure)
 - [OpenAI Codex ExecPlans article](https://developers.openai.com/cookbook/articles/codex_exec_plans)
-- [Claude Code skills](https://code.claude.com/docs/en/skills)
+- [Claude Code plugins](https://code.claude.com/docs/en/plugins)
+- [Claude Code plugin marketplaces](https://code.claude.com/docs/en/plugin-marketplaces)
 
 The ExecPlan templates are adapted from the OpenAI Cookbook article and retained under the MIT terms described in `LICENSE`.
 

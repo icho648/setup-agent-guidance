@@ -1,7 +1,7 @@
 {
   "name": "icho648-plugin",
-  "version": "1.0.0",
-  "description": "Durable project agent guidance setup and grounded explanation: initialize AGENTS.md/CLAUDE.md guidance, or explain a technical object's unique core from a concrete scenario.",
+  "version": "1.1.0",
+  "description": "Portable agent workflows for project guidance, grounded explanation, PRD authoring, implementation and review, plus evidence-based long-term learning.",
   "author": {
     "name": "icho648"
   },

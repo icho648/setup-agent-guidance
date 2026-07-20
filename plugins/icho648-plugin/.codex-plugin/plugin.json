@@ -1,7 +1,7 @@
 {
   "name": "icho648-plugin",
-  "version": "1.0.0",
-  "description": "Durable project agent guidance setup and grounded explanation: initialize AGENTS.md/CLAUDE.md guidance, or explain a technical object's unique core from a concrete scenario.",
+  "version": "1.1.0",
+  "description": "Portable agent workflows for project guidance, grounded explanation, PRD authoring, implementation and review, plus evidence-based long-term learning.",
   "author": {
     "name": "icho648",
     "url": "https://github.com/icho648"
@@ -17,8 +17,12 @@
     "onboarding",
     "code-review",
     "execplan",
+    "prd",
+    "product-requirements",
+    "implementation-review",
     "explanation",
     "learning",
+    "education",
     "mental-model",
     "concept",
     "implementation"
@@ -26,13 +30,15 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Icho648 Plugin",
-    "shortDescription": "Project agent guidance setup and grounded explanation.",
-    "longDescription": "Two Agent Skills: setup-agent-guidance initializes durable project agent guidance (AGENTS.md/CLAUDE.md, ExecPlan, code-review policy); grounded-explainer explains a technical object's unique core from a concrete scenario.",
+    "shortDescription": "Project guidance, PRD delivery, explanation, and learning.",
+    "longDescription": "Six portable Agent Skills: setup-agent-guidance, grounded-explainer, write-prd, implement-prd, review-prd-implementation, and learn.",
     "developerName": "icho648",
     "category": "Productivity",
     "capabilities": [],
     "defaultPrompt": [
-      "Use $setup-agent-guidance to initialize project agent guidance, or $grounded-explainer to explain a technical object."
+      "Use $setup-agent-guidance to initialize durable project guidance.",
+      "Use $write-prd, $implement-prd, or $review-prd-implementation for a PRD workflow.",
+      "Use $learn to build durable capability through evidence-based practice."
     ]
   }
 }

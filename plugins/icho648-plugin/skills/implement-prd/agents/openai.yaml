@@ -1,0 +1,4 @@
+interface:
+  display_name: "实施 PRD"
+  short_description: "按 PRD 生成易懂计划、实施、审阅并逐条验收"
+  default_prompt: "使用 $implement-prd 处理已确认的 PRD；若处于 Plan Mode，先用合适的图表或结构化表达生成便于理解的决策完整计划。"
