@@ -1,0 +1,10 @@
+{
+  "name": "rit-plugin",
+  "version": "1.0.0",
+  "description": "Rit's project-guidance, grounded-explanation, and evidence-based learning workflows.",
+  "author": {
+    "name": "icho648"
+  },
+  "homepage": "https://github.com/icho648/flowcrafter/tree/main/plugins/rit-plugin",
+  "license": "MIT"
+}

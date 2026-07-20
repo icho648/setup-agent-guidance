@@ -1,0 +1,34 @@
+{
+  "name": "prd-workflow",
+  "version": "1.0.0",
+  "description": "Author, implement, and review PRDs through one evidence-backed delivery workflow.",
+  "author": {
+    "name": "icho648",
+    "url": "https://github.com/icho648"
+  },
+  "homepage": "https://github.com/icho648/flowcrafter/tree/main/plugins/prd-workflow",
+  "repository": "https://github.com/icho648/flowcrafter",
+  "license": "MIT",
+  "keywords": [
+    "prd",
+    "product-requirements",
+    "implementation",
+    "code-review",
+    "acceptance",
+    "specification"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "PRD Workflow",
+    "shortDescription": "PRD authoring, delivery, and review as one loop.",
+    "longDescription": "Write executable PRDs, implement confirmed requirements, and complete Standards and Spec review before acceptance.",
+    "developerName": "icho648",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": [
+      "Use $write-prd to create a concise, verifiable product contract.",
+      "Use $implement-prd to deliver an approved PRD with acceptance evidence.",
+      "Use $review-prd-implementation to review an existing PRD implementation."
+    ]
+  }
+}

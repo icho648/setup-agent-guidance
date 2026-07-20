@@ -1,14 +1,26 @@
 {
-  "name": "icho648-skills",
+  "name": "flowcrafter",
   "interface": {
-    "displayName": "Icho648 Skills"
+    "displayName": "Flowcrafter"
   },
   "plugins": [
     {
-      "name": "icho648-plugin",
+      "name": "rit-plugin",
       "source": {
         "source": "local",
-        "path": "./plugins/icho648-plugin"
+        "path": "./plugins/rit-plugin"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "prd-workflow",
+      "source": {
+        "source": "local",
+        "path": "./plugins/prd-workflow"
       },
       "policy": {
         "installation": "AVAILABLE",

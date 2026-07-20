@@ -1,138 +1,127 @@
-# icho648-skills
+# Flowcrafter
 
-[![validate skills](https://github.com/icho648/skills/actions/workflows/validate.yml/badge.svg)](./.github/workflows/validate.yml)
+[![validate skills](https://github.com/icho648/flowcrafter/actions/workflows/validate.yml/badge.svg)](./.github/workflows/validate.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Agent Skills](https://img.shields.io/badge/Agent%20Skills-1.0-blue)](https://agentskills.io/specification)
 
 [简体中文](README.zh-CN.md)
 
-A searchable Claude Code and Codex **plugin marketplace** hosting portable Agent Skills by `icho648`. Add this repository as a marketplace, then install the plugin to get all six skills.
+A Claude Code and Codex marketplace for crafted Agent workflows. Add `flowcrafter` once, then install Rit’s personal workflow bundle, the PRD delivery workflow, or both.
 
 ## Plugins
 
-| Plugin | Skills | What it does |
+| Plugin | Included skills | Boundary |
 | --- | --- | --- |
-| [icho648-plugin](plugins/icho648-plugin/) | `setup-agent-guidance`, `grounded-explainer`, `write-prd`, `implement-prd`, `review-prd-implementation`, `learn` | Set up durable agent guidance; explain technical objects from concrete scenarios; author, implement, and review PRDs with an evidence-backed loop; and maintain long-term learning state with real practice and demonstrated mastery. |
+| [rit-plugin](plugins/rit-plugin/) | `setup-agent-guidance`, `grounded-explainer`, `learn` | Rit’s project-guidance, explanation, and learning workflows share one personal bundle. |
+| [prd-workflow](plugins/prd-workflow/) | `write-prd`, `implement-prd`, `review-prd-implementation` | Implementation has a hard dependency on the review loop, so the PRD skills install together. |
+
+The GitHub repository name and Marketplace ID are both `flowcrafter`.
 
 ## Install
 
-### Add the marketplace and install the plugin (Claude Code)
-
-```text
-/plugin marketplace add icho648/skills
-/plugin install icho648-plugin@icho648-skills
-```
-
-Or from the CLI:
+### Codex
 
 ```bash
-claude plugin marketplace add icho648/skills
-claude plugin install icho648-plugin@icho648-skills
+codex plugin marketplace add icho648/flowcrafter
+codex plugin add rit-plugin@flowcrafter
+codex plugin add prd-workflow@flowcrafter
 ```
 
-Restart Claude Code after installing so the new skills are discovered.
+Install either plugin or both. Start a new Codex task afterward so the selected skills are discovered.
 
-### Add the marketplace and install the plugin (Codex)
+### Claude Code
 
 ```bash
-codex plugin marketplace add icho648/skills
-codex plugin add icho648-plugin@icho648-skills
+claude plugin marketplace add icho648/flowcrafter
+claude plugin install rit-plugin@flowcrafter
+claude plugin install prd-workflow@flowcrafter
 ```
 
-Start a new Codex task after installation so the plugin skills are discovered.
+Restart Claude Code after installation. Claude Code invocations are namespaced, for example `/rit-plugin:learn` and `/prd-workflow:write-prd`; Codex invokes the same skills as `$learn` and `$write-prd`.
 
-### Manual installation
+### Migrate from `icho648-skills`
 
-Each skill is a portable Agent Skills package under `plugins/icho648-plugin/skills/<name>/`. Clone the repository, then copy or symlink a skill directory to a location your client scans.
-
-Claude Code, global:
+The former Marketplace ID and all-in-one plugin are replaced by `flowcrafter` and two focused plugins:
 
 ```bash
-mkdir -p "$HOME/.claude/skills"
-cp -R plugins/icho648-plugin/skills/setup-agent-guidance "$HOME/.claude/skills/"
-cp -R plugins/icho648-plugin/skills/grounded-explainer "$HOME/.claude/skills/"
-cp -R plugins/icho648-plugin/skills/write-prd "$HOME/.claude/skills/"
-cp -R plugins/icho648-plugin/skills/implement-prd "$HOME/.claude/skills/"
-cp -R plugins/icho648-plugin/skills/review-prd-implementation "$HOME/.claude/skills/"
-cp -R plugins/icho648-plugin/skills/learn "$HOME/.claude/skills/"
+# Codex
+codex plugin remove icho648-plugin@icho648-skills
+codex plugin marketplace remove icho648-skills
+codex plugin marketplace add icho648/flowcrafter
+codex plugin add rit-plugin@flowcrafter
+codex plugin add prd-workflow@flowcrafter
 ```
-
-Codex, global:
 
 ```bash
-mkdir -p "$HOME/.agents/skills"
-cp -R plugins/icho648-plugin/skills/setup-agent-guidance "$HOME/.agents/skills/"
-cp -R plugins/icho648-plugin/skills/grounded-explainer "$HOME/.agents/skills/"
-cp -R plugins/icho648-plugin/skills/write-prd "$HOME/.agents/skills/"
-cp -R plugins/icho648-plugin/skills/implement-prd "$HOME/.agents/skills/"
-cp -R plugins/icho648-plugin/skills/review-prd-implementation "$HOME/.agents/skills/"
-cp -R plugins/icho648-plugin/skills/learn "$HOME/.agents/skills/"
+# Claude Code
+claude plugin uninstall icho648-plugin@icho648-skills
+claude plugin marketplace remove icho648-skills
+claude plugin marketplace add icho648/flowcrafter
+claude plugin install rit-plugin@flowcrafter
+claude plugin install prd-workflow@flowcrafter
 ```
 
-Plugin invocations are namespaced in Claude Code, for example `/icho648-plugin:write-prd`; Codex uses `$write-prd`. Manually installed standalone skills use `/write-prd` in Claude Code.
+Skip any removal command for an item that was not installed.
+
+### Manual skill installation
+
+Each `plugins/<plugin>/skills/<skill>/` directory is a portable Agent Skills package. Clone the repository, then copy or symlink the desired skill into `$HOME/.claude/skills/` or `$HOME/.agents/skills/`.
+
+When installing `implement-prd` manually, also install `review-prd-implementation`; the review loop is a hard dependency.
 
 ## Repository layout
 
 ```text
 .
-├── .claude-plugin/
-│   └── marketplace.json          # Claude Code marketplace registry
-├── .agents/plugins/
-│   └── marketplace.json          # Codex marketplace registry
+├── .claude-plugin/marketplace.json       # Claude Code Marketplace
+├── .agents/plugins/marketplace.json      # Codex Marketplace
 ├── plugins/
-│   └── icho648-plugin/
-│       ├── .claude-plugin/plugin.json
-│       ├── .codex-plugin/plugin.json
-│       ├── skills/
-│       │   ├── setup-agent-guidance/
-│       │   ├── grounded-explainer/
-│       │   ├── write-prd/
-│       │   ├── implement-prd/
-│       │   ├── review-prd-implementation/
-│       │   └── learn/                      # Agent Skills packages
-│       ├── README.md
-│       └── README.zh-CN.md
-├── .github/                      # workflows and repository validator
-├── tests/                        # validator regression tests
-├── AGENTS.md                     # maintenance instructions for coding agents
-├── CLAUDE.md                     # imports the same maintenance instructions
-├── README.md
-├── README.zh-CN.md
-└── LICENSE
+│   ├── rit-plugin/
+│   │   └── skills/
+│   │       ├── setup-agent-guidance/
+│   │       ├── grounded-explainer/
+│   │       └── learn/
+│   └── prd-workflow/
+│       └── skills/
+│           ├── write-prd/
+│           ├── implement-prd/
+│           └── review-prd-implementation/
+├── .github/                              # validation and release workflows
+├── tests/                                # validator regression tests
+└── AGENTS.md                             # Marketplace maintenance policy
 ```
 
-The repository root is the **marketplace**. Each `plugins/<name>/` directory is one Claude Code and Codex plugin and contains one or more Agent Skills packages under `skills/<name>/`.
+Each plugin has client-specific manifests in `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json`. Its canonical Agent Skills live under `skills/`.
 
-## Three compatible standards
+## Compatibility model
 
-- **Claude Code plugin marketplace.** `.claude-plugin/marketplace.json` registers the marketplace and lists each plugin with a local `source` path. Each plugin has a `.claude-plugin/plugin.json` manifest. This is what makes the skills searchable and installable via `/plugin`.
-- **Codex plugin marketplace.** `.agents/plugins/marketplace.json` registers the same plugin roots for Codex, and each plugin has a `.codex-plugin/plugin.json` manifest pointing at its existing `skills/` directory.
-- **Agent Skills specification.** Each `skills/<name>/` directory is a standalone, cross-client Agent Skills package (`SKILL.md` + optional `assets/`, `references/`, `agents/`), validated with `skills-ref`. Codex and other Agent Skills clients can consume it directly without the plugin wrapper.
+- The Claude Code Marketplace and plugin manifests provide Claude distribution and command namespacing.
+- The Codex Marketplace and plugin manifests provide Codex distribution and presentation metadata.
+- Every `skills/<name>/` directory follows the cross-client Agent Skills package structure and can also be installed without the plugin wrapper.
 
-`agents/openai.yaml` is optional Codex presentation metadata; other Agent Skills clients ignore it.
+## Maintenance
 
-## English and Chinese maintenance policy
-
-Each skill keeps one identity and one canonical workflow in its `SKILL.md`. Localized user-facing resources use filename suffixes:
-
-- English: `*.en.md` and `*.en.template.md`
-- Simplified Chinese: `*.zh-CN.md` and `*.zh-CN.template.md`
-
-`setup-agent-guidance` ships localized asset/reference pairs. The other skills are currently authored in Simplified Chinese and use language-neutral Agent Skills structure. When changing behavior, update both localized members of every affected pair in the same change and keep headings, managed markers, placeholders, and requirements in semantic lockstep.
+- Treat a plugin as an install, version, and dependency boundary.
+- Keep the Claude Code and Codex marketplace entries and manifests synchronized.
+- Keep hard-dependent skills in the same plugin.
+- Keep English and Simplified Chinese resource pairs in semantic lockstep.
 
 ## Validate
 
-Using the reference validator from the Agent Skills project:
-
 ```bash
-for skill in plugins/icho648-plugin/skills/*; do
+for skill in plugins/*/skills/*; do
   python -m skills_ref.cli validate "$skill"
 done
+
+for plugin in plugins/*; do
+  python ~/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py "$plugin"
+done
+
+python .github/scripts/validate_repository.py
+python -m unittest tests/test_validate_repository.py
 ```
 
-This repository also ships a GitHub Actions workflow at `.github/workflows/validate.yml` that validates every skill, both marketplace formats, Codex plugin manifests, localized resource pairs, and relative references on every push and pull request.
-
-A second workflow at `.github/workflows/release.yml` builds a `.skill` archive per skill on `workflow_dispatch` or on every `v*` tag push, and attaches the archives to the matching GitHub Release. Use the manual run to produce a pre-release artifact without tagging; use the tag flow for a permanent versioned release.
+GitHub Actions runs the same repository, Skill, Marketplace, and Plugin checks on pushes and pull requests.
 
 ## Sources
 
@@ -140,7 +129,6 @@ A second workflow at `.github/workflows/release.yml` builds a `.skill` archive p
 - [Claude Code plugin marketplaces](https://code.claude.com/docs/en/plugin-marketplaces)
 - [Agent Skills specification](https://agentskills.io/specification)
 - [Codex customization and skills](https://developers.openai.com/codex/concepts/customization#skills)
-- [Claude Code skills](https://code.claude.com/docs/en/skills)
 
 ## License
 

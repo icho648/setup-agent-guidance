@@ -1,6 +1,6 @@
 # Repository Agent Guidance
 
-This repository is a Claude Code and Codex **plugin marketplace** that hosts one or more skill plugins. The repository root is the marketplace; each `plugins/<name>/` directory is one plugin and contains one or more Agent Skills packages under `skills/<name>/`. Repository-root maintenance files are shipped alongside the marketplace.
+This repository is a Claude Code and Codex **plugin marketplace**, not one monolithic plugin. The repository root is the marketplace; each `plugins/<name>/` directory is one independently installable plugin and contains one or more Agent Skills packages under `skills/<name>/`. Repository-root maintenance files are shipped alongside the marketplace.
 
 ## Source of truth
 
@@ -22,6 +22,7 @@ This repository is a Claude Code and Codex **plugin marketplace** that hosts one
 - Preserve the English ExecPlan source and the Chinese translation in semantic lockstep (applies to `setup-agent-guidance`).
 - When adding, renaming, or removing a plugin, update both marketplace registries and both client manifests in the same change, and keep the plugin directory name, source paths, manifest names, and skill directory name consistent.
 - Keep marketplace descriptions in sync with the corresponding client manifests and canonical skill behavior.
+- Use a plugin as the install, version, and dependency boundary: keep hard-dependent skills together, but do not bundle unrelated skills merely because they share a publisher.
 
 ## Verification
 
