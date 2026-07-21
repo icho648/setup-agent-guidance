@@ -5,7 +5,7 @@ Rit 的个人 Claude Code 与 Codex 工作流插件包。
 ## 包含的 Skills
 
 - `setup-agent-guidance`：初始化持久、双语的项目指南。
-- `grounded-explainer`：仅显式调用、问题优先的技术解释。
+- `grounded-explainer`：仅显式调用，以真实场景和必要证据为基础、按问题深度展开的技术解释。
 - `learn`：通过真实练习维护有证据的学习状态。
 
 作为一组个人工作流打包，统一安装与版本；每个 skill 仍可独立使用。PRD 交付工作流仍通过 `prd-workflow` 单独安装。

@@ -5,7 +5,7 @@ Rit's personal Claude Code and Codex workflow bundle.
 ## Included skills
 
 - `setup-agent-guidance` — initialize durable, bilingual project guidance.
-- `grounded-explainer` — explicitly invoked, problem-first technical explanation.
+- `grounded-explainer` — explicitly invoked, evidence-grounded technical explanation with concrete scenarios and proportional depth.
 - `learn` — maintain evidence-based learning state through real practice.
 
 Grouped as one personal workflow set so they install and version together; each skill remains independently usable. The PRD delivery workflow is separately installable as `prd-workflow`.

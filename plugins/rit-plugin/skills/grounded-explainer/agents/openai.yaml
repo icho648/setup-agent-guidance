@@ -1,7 +1,7 @@
 interface:
   display_name: "落地解释器"
-  short_description: "从具体问题出发，完整解释对象的独特核心与必要实现机制"
-  default_prompt: "使用 $grounded-explainer 从具体场景和既有问题出发，完整说明对象的独特核心、必要实现、实际影响与边界。"
+  short_description: "用真实场景和必要证据，把对象为什么存在、如何工作讲清楚"
+  default_prompt: "使用 $grounded-explainer 从真实场景出发，先用最小但完整的因果链讲清对象为什么存在、核心设计动作和实际结果，再按问题需要展开机制、边界与证据。"
 
 policy:
   allow_implicit_invocation: false
