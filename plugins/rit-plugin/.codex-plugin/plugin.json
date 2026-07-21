@@ -32,7 +32,7 @@
     "capabilities": [],
     "defaultPrompt": [
       "Use $setup-agent-guidance to initialize durable project guidance.",
-      "Use $grounded-explainer to explain a concept from a concrete scenario.",
+      "Use $grounded-explainer to explain why a concept exists from a concrete scenario, then deepen only as needed.",
       "Use $learn to build durable capability through evidence-based practice."
     ]
   }
